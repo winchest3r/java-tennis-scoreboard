@@ -1,6 +1,10 @@
 package io.github.winchest3r;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,46 +15,67 @@ import java.util.*;
  * Class with simple h2 database connection tests.
  */
 public class SimpleDatabaseTests {
+    /**
+     * Connection to h2 database.
+     */
     private static Connection conn;
 
-    private final String REMOVE_TABLE_SQL = """
+    /**
+     * Query to remove table from database.
+     */
+    private static final String REMOVE_TABLE_SQL = """
     DROP TABLE IF EXISTS dogs;
     """;
 
-    private final String INIT_TEST_DB_SQL = """
+    /**
+     * Query to create simple test table in database.
+     */
+    private static final String INIT_TEST_DB_SQL = """
     CREATE TABLE dogs (
         dogId INTEGER PRIMARY KEY AUTO_INCREMENT,
         dogName VARCHAR(40) NOT NULL
     );
     """;
 
-    private final String INSERT_ONE_SQL = """
+    /**
+     * Query to insert one object in table.
+     */
+    private static final String INSERT_ONE_SQL = """
     INSERT INTO dogs (dogName)
     VALUES ('Bobik')
     """;
 
-    private final String INSERT_FIVE_SQL = """
+    /**
+     * Query to insert five objects in table.
+     */
+    private static final String INSERT_FIVE_SQL = """
     INSERT INTO dogs (dogName)
-    VALUES ('Bobik'), ('Max'), ('Rex'), ('Rocket'), ('Moon');    
+    VALUES ('Bobik'), ('Max'), ('Rex'), ('Rocket'), ('Moon');
     """;
 
-    private final String GET_ALL_SQL = """
-    SELECT * FROM dogs;        
+    /**
+     * Query to select all data from test table.
+     */
+    private static final String GET_ALL_SQL = """
+    SELECT * FROM dogs;
     """;
 
-    private final static String testDir = "./target/test-data/test";
+    /**
+     * Path to database.
+     */
+    private static final String TEST_DIR = "./target/test-data/test";
 
     @BeforeAll
     static void databaseLoading() {
-        //org.h2.Driver.load();
+        // org.h2.Driver.load();
         assertDoesNotThrow(() -> {
-            conn = DriverManager.getConnection("jdbc:h2:" + testDir, "sa", "");
+            conn = DriverManager.getConnection("jdbc:h2:" + TEST_DIR, "sa", "");
         });
         assertNotNull(conn);
     }
 
     @BeforeEach
-    void initializeDatabase() {
+    final void initializeDatabase() {
         assertNotNull(conn);
         assertDoesNotThrow(() -> {
             try (Statement statement = conn.createStatement()) {
@@ -82,10 +107,12 @@ public class SimpleDatabaseTests {
         assertDoesNotThrow(() -> {
             try (Statement statement = conn.createStatement()) {
                 int addResult = statement.executeUpdate(INSERT_FIVE_SQL);
-                assertEquals(addResult, 5);
+                assertEquals(addResult, names.size());
                 var result = statement.executeQuery(GET_ALL_SQL);
                 while (result.next()) {
-                    assertEquals(result.getString("dogName"), names.get(5 - addResult));
+                    assertEquals(result.getString(
+                        "dogName"), names.get(names.size() - addResult)
+                );
                     --addResult;
                 }
                 assertEquals(addResult, 0);
@@ -94,6 +121,7 @@ public class SimpleDatabaseTests {
     }
 
     @AfterEach
+    final
     void cleanDatabase() {
         assertNotNull(conn);
         assertDoesNotThrow(() -> {

@@ -12,20 +12,34 @@ import com.fasterxml.jackson.databind.*;
 
 import io.github.winchest3r.models.Player;
 
-@WebServlet(name="PlayersServlet", urlPatterns="/players")
+/**
+ * Servlet to show all players.
+ * @deprecated Will be removed after testing.
+ */
+@WebServlet(name = "PlayersServlet", urlPatterns = "/players")
 public class PlayersServlet extends HttpServlet {
+    /** List of players. */
     private List<Player> players = new ArrayList<>();
+
+    /** Connection. */
     private Connection conn;
+
+    /** Json mapper. */
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * Initialize database.
+     */
     @Override
-    public void init(ServletConfig config) {
+    public void init(final ServletConfig config) {
         try {
             org.h2.Driver.load();
             conn = DriverManager.getConnection("jdbc:h2:./db", "sa", "");
-            config.getServletContext().log(
-                getClass().getName() + ": Database initialized"
-            );
+            if (!conn.isClosed()) {
+                config.getServletContext().log(
+                    getClass().getName() + ": Database initialized"
+                );
+            }
         } catch (Exception ex) {
             config.getServletContext().log(
                 getClass().getName() + ": Can't establish a connection", ex
@@ -33,15 +47,20 @@ public class PlayersServlet extends HttpServlet {
         }
     }
 
+    /**
+     * GET to /players.
+     */
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) {
+    public void doGet(final HttpServletRequest request,
+                      final HttpServletResponse response) {
         response.setContentType("application/json");
-
         try (Writer out = response.getWriter()) {
             String json = objectMapper.writeValueAsString(players);
             out.write(json);
         } catch (Exception ex) {
-            getServletContext().log(getClass().getName() + " An exception occured during HTTP GET", ex);
+            getServletContext().log(
+                getClass().getName()
+                    + " An exception occured during HTTP GET", ex);
         }
     }
 }
