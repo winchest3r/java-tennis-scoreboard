@@ -12,6 +12,7 @@
             <a href="">home</a>
             / <a href="matches">matches</a>
             / <a href="add-match">add new</a>
+            / <a href="players">players</a>
             / <a href="<%= githubLink %>">github</a>
         </nav>
     </body>

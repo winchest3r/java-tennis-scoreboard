@@ -3,29 +3,31 @@
 **players**
 | name       | type    | notes       |
 |------------|---------|-------------|
-| playerId   | uuid    | primary key |
+| playerId   | integer | primary key |
+| playerUuid | uuid    | index       |
 | playerName | varchar |             |
 
 **matches**
 | name           | type    | notes                                         |
 |----------------|---------|-----------------------------------------------|
-| matchId        | uuid    | primary key                                   |
-| winnerId       | uuid    | foreign key to **players** or null if ongoing |
+| matchId        | integer | primary key                                   |
+| matchUuid      | uuid    | index                                         |
+| winnerId       | integer | foreign key to **players** or null if ongoing |
 
 **sets**
-| name              | type    | notes       |
-|-------------------|---------|-------------|
-| setId             | uuid    | primary key |
-| matchId           | uuid    | foreign key |
-| playerOneId       | uuid    | foreign key |
-| playerTwoId       | uuid    | foreign key |
-| playerOneSetScore | integer |             |
-| playerTwoSetScore | integer |             |
+| name              | type    | notes                      |
+|-------------------|---------|----------------------------|
+| setId             | integer | primary key                |
+| matchId           | integer | foreign key to **matches** |
+| playerOneId       | integer | foreign key to **players** |
+| playerTwoId       | integer | foreign key to **players** |
+| playerOneSetScore | integer |                            |
+| playerTwoSetScore | integer |                            |
 
 **games**
 | name               | type    | notes                                         |
 |--------------------|---------|-----------------------------------------------|
-| gameId             | uuid    | primary key                                   |
-| setId              | uuid    | foreign key to **sets**                       |
+| gameId             | integer | primary key                                   |
+| setId              | integer | foreign key to **sets**                       |
 | playerOneGameScore | integer | 0 is 0, 1 is 15, 2 is 30,                     |
 | playerTwoGameScore | integer | 3 is 40, and so on with other score           |
