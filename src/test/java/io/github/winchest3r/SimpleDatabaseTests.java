@@ -38,11 +38,13 @@ public class SimpleDatabaseTests {
     SELECT * FROM dogs;        
     """;
 
+    private final static String testDir = "./target/test-data/test";
+
     @BeforeAll
     static void databaseLoading() {
         //org.h2.Driver.load();
         assertDoesNotThrow(() -> {
-            conn = DriverManager.getConnection("jdbc:h2:./test", "sa", "");
+            conn = DriverManager.getConnection("jdbc:h2:" + testDir, "sa", "");
         });
         assertNotNull(conn);
     }

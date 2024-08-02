@@ -17,3 +17,6 @@ buildNumber.properties
 
 # VSCode
 .vscode
+
+# Test files
+*.db
