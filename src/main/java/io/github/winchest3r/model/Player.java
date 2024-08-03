@@ -15,7 +15,9 @@ public class Player {
     private  int id;
 
     /** Player's UUID is used in url routing. */
-    @Column(name = "playerUuid", nullable = false)
+    @Column(
+        name = "playerUuid",
+        columnDefinition = "uuid default random_uuid()")
     private UUID uuid;
 
     /** As said. */
@@ -25,8 +27,7 @@ public class Player {
     @Column(
         name = "playerName",
         length = PLAYER_NAME_MAX_LENGTH,
-        nullable = false
-    )
+        nullable = false)
     private String name;
 
     /** Default constructor. */

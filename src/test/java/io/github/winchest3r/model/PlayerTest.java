@@ -1,12 +1,12 @@
 package io.github.winchest3r.model;
 
-import jakarta.persistence.*;
+import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.schema.Action;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Map;
 
 public class PlayerTest {
     /**
@@ -16,20 +16,31 @@ public class PlayerTest {
         "jdbc:h2:./target/test-data/persistencePlayerTest";
 
     /** Entity Manager for model testing. */
-    private static EntityManagerFactory entityManagerFactory;
+    private static SessionFactory sessionFactory;
 
     @BeforeAll
     static void establishPersistentConnection() {
-        entityManagerFactory =
-        Persistence.createEntityManagerFactory(
-            "io.github.winchest3r",
-            Map.of(AvailableSettings.JAKARTA_JDBC_URL, TEST_URL)
-        );
+        sessionFactory = new Configuration()
+            .addAnnotatedClass(Player.class)
+            // H2
+            .setProperty(AvailableSettings.JAKARTA_JDBC_URL, TEST_URL)
+            // Credentials
+            .setProperty(AvailableSettings.JAKARTA_JDBC_USER, "sa")
+            // Automatic schema export
+            .setProperty(
+                AvailableSettings.JAKARTA_HBM2DDL_DATABASE_ACTION,
+                Action.SPEC_ACTION_DROP_AND_CREATE)
+            // SQL statement logging
+            .setProperty(AvailableSettings.SHOW_SQL, true)
+            .setProperty(AvailableSettings.FORMAT_SQL, true)
+            .setProperty(AvailableSettings.HIGHLIGHT_SQL, true)
+            // Create a new SessionFactory
+            .buildSessionFactory();
     }
 
     @Test
     void connectionIsEstablished() {
-        assertNotNull(entityManagerFactory);
-        assertTrue(entityManagerFactory.isOpen());
+        assertNotNull(sessionFactory);
+        assertTrue(sessionFactory.isOpen());
     }
 }
