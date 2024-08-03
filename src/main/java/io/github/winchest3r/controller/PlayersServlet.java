@@ -1,4 +1,4 @@
-package io.github.winchest3r.controllers;
+package io.github.winchest3r.controller;
 
 import java.util.*;
 import java.io.*;
@@ -10,7 +10,7 @@ import jakarta.servlet.http.*;
 
 import com.fasterxml.jackson.databind.*;
 
-import io.github.winchest3r.models.Player;
+import io.github.winchest3r.model.Player;
 
 /**
  * Servlet to show all players.
@@ -28,26 +28,6 @@ public class PlayersServlet extends HttpServlet {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     /**
-     * Initialize database.
-     */
-    @Override
-    public void init(final ServletConfig config) {
-        try {
-            org.h2.Driver.load();
-            conn = DriverManager.getConnection("jdbc:h2:./db", "sa", "");
-            if (!conn.isClosed()) {
-                config.getServletContext().log(
-                    getClass().getName() + ": Database initialized"
-                );
-            }
-        } catch (Exception ex) {
-            config.getServletContext().log(
-                getClass().getName() + ": Can't establish a connection", ex
-            );
-        }
-    }
-
-    /**
      * GET to /players.
      */
     @Override
@@ -61,6 +41,19 @@ public class PlayersServlet extends HttpServlet {
             getServletContext().log(
                 getClass().getName()
                     + " An exception occured during HTTP GET", ex);
+        }
+    }
+
+    /**
+     * POST a player.
+     */
+    @Override
+    public void doPost(final HttpServletRequest request,
+                       final HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
+
+        if (params.containsKey("name")) {
+            getServletContext().log("playerName=" + params.get("name")[0]);
         }
     }
 }

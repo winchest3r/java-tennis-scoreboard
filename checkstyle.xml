@@ -32,6 +32,10 @@
 -->
 
 <module name="Checker">
+  <module name="BeforeExecutionExclusionFileFilter">
+    <property name="fileNamePattern" value=".*[\\/]generated-sources[\\/]*$" />
+  </module>
+
   <!--
       If you set the basedir property below, then all reported file
       names will be relative to the specified directory. See

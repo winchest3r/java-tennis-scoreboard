@@ -1,15 +1,32 @@
-package io.github.winchest3r.models;
+package io.github.winchest3r.model;
+
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
+@Entity
+@Table(name = "player", indexes = {
+    @Index(name = "playerUuid_index", columnList = "playerUuid", unique = true)
+})
 public class Player {
     /** Player's id is used in database as primary key. */
+    @Id
+    @GeneratedValue
     private  int id;
 
     /** Player's UUID is used in url routing. */
+    @Column(name = "playerUuid", nullable = false)
     private UUID uuid;
 
+    /** As said. */
+    private static final int PLAYER_NAME_MAX_LENGTH = 40;
+
     /** Player's name. It can't be longer then 40 characters. */
+    @Column(
+        name = "playerName",
+        length = PLAYER_NAME_MAX_LENGTH,
+        nullable = false
+    )
     private String name;
 
     /** Default constructor. */
