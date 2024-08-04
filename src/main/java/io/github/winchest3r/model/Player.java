@@ -2,6 +2,7 @@ package io.github.winchest3r.model;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -29,6 +30,10 @@ public class Player {
         length = PLAYER_NAME_MAX_LENGTH,
         nullable = false)
     private String name;
+
+    /** Set of player's winner matches. */
+    @OneToMany(mappedBy = Match_.WINNER)
+    private Set<Match> winnerMatches;
 
     /** Default constructor. */
     public Player() { }
@@ -91,5 +96,21 @@ public class Player {
      */
     public void setName(final String newName) {
         this.name = newName;
+    }
+
+    /**
+     * Get player's won matches.
+     * @return Set of matches.
+     */
+    public Set<Match> getWinnerMatches() {
+        return this.winnerMatches;
+    }
+
+    /**
+     * Set new player's winner matches.
+     * @param newWinnerMatches New player's winner matches.
+     */
+    public void setWinnerMatches(final Set<Match> newWinnerMatches) {
+        this.winnerMatches = newWinnerMatches;
     }
 }

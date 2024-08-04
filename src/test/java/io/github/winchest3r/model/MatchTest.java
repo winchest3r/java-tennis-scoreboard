@@ -3,17 +3,16 @@ package io.github.winchest3r.model;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.tool.schema.Action;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PlayerTest {
+public class MatchTest {
     /**
      * Url to testing database.
      */
     private static final String TEST_URL =
-        "jdbc:h2:./target/test-data/persistencePlayerTest";
+        "jdbc:h2:./target/test-data/persistenceMatchTest";
 
     /** Entity Manager for model testing. */
     private static SessionFactory sessionFactory;
@@ -23,12 +22,6 @@ public class PlayerTest {
         sessionFactory = new Configuration()
             // H2
             .setProperty(AvailableSettings.JAKARTA_JDBC_URL, TEST_URL)
-            // Credentials
-            .setProperty(AvailableSettings.JAKARTA_JDBC_USER, "sa")
-            // Automatic schema export
-            .setProperty(
-                AvailableSettings.JAKARTA_HBM2DDL_DATABASE_ACTION,
-                Action.SPEC_ACTION_DROP_AND_CREATE)
             // SQL statement logging
             .setProperty(AvailableSettings.SHOW_SQL, true)
             .setProperty(AvailableSettings.FORMAT_SQL, true)
