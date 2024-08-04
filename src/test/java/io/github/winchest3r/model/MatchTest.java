@@ -20,6 +20,8 @@ public class MatchTest {
     @BeforeAll
     static void establishPersistentConnection() {
         sessionFactory = new Configuration()
+            .addAnnotatedClass(Player.class)
+            .addAnnotatedClass(Match.class)
             // H2
             .setProperty(AvailableSettings.JAKARTA_JDBC_URL, TEST_URL)
             // SQL statement logging
