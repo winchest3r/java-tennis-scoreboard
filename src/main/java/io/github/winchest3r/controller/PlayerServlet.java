@@ -13,9 +13,6 @@ import com.fasterxml.jackson.databind.*;
 import org.hibernate.*;
 import org.hibernate.cfg.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.github.winchest3r.model.Player;
 
 /**
@@ -30,9 +27,6 @@ public class PlayerServlet extends HttpServlet {
     /** SessionFactory. */
     private static SessionFactory sessionFactory;
 
-    /** Logger. */
-    private static Logger logger = LoggerFactory.getLogger(PlayerServlet.class);
-
     /** Json mapper. */
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -43,7 +37,8 @@ public class PlayerServlet extends HttpServlet {
         new Configuration()
             .buildSessionFactory();
         if (sessionFactory.isOpen()) {
-            logger.info("Session is established");
+            config.getServletContext().log(
+                getClass().getName() + ": Session is established");
         }
     }
 
@@ -60,7 +55,7 @@ public class PlayerServlet extends HttpServlet {
         } catch (Exception ex) {
             getServletContext().log(
                 getClass().getName()
-                    + " An exception occured during HTTP GET", ex);
+                    + ": An exception occured during HTTP GET", ex);
         }
     }
 
@@ -75,5 +70,11 @@ public class PlayerServlet extends HttpServlet {
         if (params.containsKey("name")) {
             getServletContext().log("playerName=" + params.get("name")[0]);
         }
+    }
+
+    /** Close session. */
+    @Override
+    public void destroy() {
+        sessionFactory.close();
     }
 }
