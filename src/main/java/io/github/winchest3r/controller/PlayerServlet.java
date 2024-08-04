@@ -2,7 +2,6 @@ package io.github.winchest3r.controller;
 
 import java.util.*;
 import java.io.*;
-import java.sql.*;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.*;
@@ -14,6 +13,8 @@ import org.hibernate.*;
 import org.hibernate.cfg.*;
 
 import io.github.winchest3r.model.Player;
+
+import io.github.winchest3r.utils.SimpleServletContextLogger;
 
 /**
  * Servlet to show all players.
@@ -27,18 +28,24 @@ public class PlayerServlet extends HttpServlet {
     /** SessionFactory. */
     private static SessionFactory sessionFactory;
 
+    /** Logger. */
+    private static SimpleServletContextLogger logger;
+
     /** Json mapper. */
     private ObjectMapper objectMapper = new ObjectMapper();
 
     /** Init. */
     @Override
     public void init(final ServletConfig config) {
+        logger = new SimpleServletContextLogger(
+            config.getServletContext(), getClass()
+        );
+
         sessionFactory =
         new Configuration()
             .buildSessionFactory();
         if (sessionFactory.isOpen()) {
-            config.getServletContext().log(
-                getClass().getName() + ": Session is established");
+            logger.log("Session is established");
         }
     }
 
@@ -53,9 +60,7 @@ public class PlayerServlet extends HttpServlet {
             String json = objectMapper.writeValueAsString(players);
             out.write(json);
         } catch (Exception ex) {
-            getServletContext().log(
-                getClass().getName()
-                    + ": An exception occured during HTTP GET", ex);
+            logger.log("An exception occured during HTTP GET", ex);
         }
     }
 
