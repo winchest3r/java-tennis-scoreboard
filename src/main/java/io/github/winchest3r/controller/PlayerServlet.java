@@ -10,6 +10,12 @@ import jakarta.servlet.http.*;
 
 import com.fasterxml.jackson.databind.*;
 
+import org.hibernate.*;
+import org.hibernate.cfg.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.winchest3r.model.Player;
 
 /**
@@ -17,15 +23,29 @@ import io.github.winchest3r.model.Player;
  * @deprecated Will be removed after testing.
  */
 @WebServlet(name = "PlayersServlet", urlPatterns = "/players")
-public class PlayersServlet extends HttpServlet {
+public class PlayerServlet extends HttpServlet {
     /** List of players. */
     private List<Player> players = new ArrayList<>();
 
-    /** Connection. */
-    private Connection conn;
+    /** SessionFactory. */
+    private static SessionFactory sessionFactory;
+
+    /** Logger. */
+    private static Logger logger = LoggerFactory.getLogger(PlayerServlet.class);
 
     /** Json mapper. */
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    /** Init. */
+    @Override
+    public void init(final ServletConfig config) {
+        sessionFactory =
+        new Configuration()
+            .buildSessionFactory();
+        if (sessionFactory.isOpen()) {
+            logger.info("Session is established");
+        }
+    }
 
     /**
      * GET to /players.
