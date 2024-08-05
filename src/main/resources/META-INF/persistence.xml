@@ -8,6 +8,8 @@
     <persistence-unit name="io.github.winchest3r">
         <class>io.github.winchest3r.model.Player</class>
         <class>io.github.winchest3r.model.Match</class>
+        <class>io.github.winchest3r.model.Set</class>
+        <class>io.github.winchest3r.model.Game</class>
 
         <properties>
 

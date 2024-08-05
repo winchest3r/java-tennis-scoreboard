@@ -22,6 +22,8 @@ public class MatchTest {
         sessionFactory = new Configuration()
             .addAnnotatedClass(Player.class)
             .addAnnotatedClass(Match.class)
+            .addAnnotatedClass(PlaySet.class)
+            .addAnnotatedClass(Game.class)
             // H2
             .setProperty(AvailableSettings.JAKARTA_JDBC_URL, TEST_URL)
             // SQL statement logging

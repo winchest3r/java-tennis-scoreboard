@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.Objects;
 
 @Entity
 @Table(name = "player", indexes = {
@@ -12,8 +13,9 @@ import java.util.UUID;
 public class Player {
     /** Player's id is used in database as primary key. */
     @Id
-    @GeneratedValue
-    private  int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "playerId")
+    private Long id;
 
     /** Player's UUID is used in url routing. */
     @Column(
@@ -33,28 +35,13 @@ public class Player {
 
     /** Set of player's winner matches. */
     @OneToMany(mappedBy = Match_.WINNER)
-    private Set<Match> winnerMatches;
-
-    /** Default constructor. */
-    public Player() { }
-
-    /**
-     * Constructor to initialize all fields.
-     * @param newId new player's id
-     * @param newUuid new player's UUID as {@link java.util.UUID}
-     * @param newName new player's name. It can't be longer then 40 characters.
-     */
-    public Player(final int newId, final UUID newUuid, final String newName) {
-        this.id = newId;
-        this.uuid = newUuid;
-        this.name = newName;
-    }
+    private Set<Match> matchesWon;
 
     /**
      * Get player's id.
      * @return player's id as integer value
      */
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -62,7 +49,7 @@ public class Player {
      * Set new player's id. You don't need to do this manually, usually.
      * @param newId new player's id
      */
-    public void setId(final int newId) {
+    public void setId(final Long newId) {
         this.id = newId;
     }
 
@@ -102,15 +89,32 @@ public class Player {
      * Get player's won matches.
      * @return Set of matches.
      */
-    public Set<Match> getWinnerMatches() {
-        return this.winnerMatches;
+    public Set<Match> getMatchesWon() {
+        return this.matchesWon;
     }
 
     /**
      * Set new player's winner matches.
      * @param newWinnerMatches New player's winner matches.
      */
-    public void setWinnerMatches(final Set<Match> newWinnerMatches) {
-        this.winnerMatches = newWinnerMatches;
+    public void setMatchesWon(final Set<Match> newWinnerMatches) {
+        this.matchesWon = newWinnerMatches;
+    }
+
+    /** */
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+        return other instanceof Player
+            && ((Player) other).name.equals(this.name)
+            && ((Player) other).uuid.equals(this.uuid);
+    }
+
+    /** */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.name, this.uuid);
     }
 }
