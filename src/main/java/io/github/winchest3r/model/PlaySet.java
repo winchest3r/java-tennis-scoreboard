@@ -52,7 +52,14 @@ public class PlaySet {
     private Integer playerTwoSetScore;
 
     /** Games related to the set. */
-    @OneToMany(mappedBy = Game_.PLAYSET)
+    @OneToMany(
+        mappedBy = Game_.PLAYSET,
+        cascade = {
+            CascadeType.PERSIST,
+            CascadeType.REMOVE,
+            CascadeType.REFRESH
+        },
+        orphanRemoval = true)
     private Set<Game> games;
 
     /**

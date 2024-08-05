@@ -50,7 +50,14 @@ public class Match {
     private Player winner;
 
     /** Sets that are associated with the match. */
-    @OneToMany(mappedBy = PlaySet_.MATCH)
+    @OneToMany(
+        mappedBy = PlaySet_.MATCH,
+        cascade = {
+            CascadeType.PERSIST,
+            CascadeType.REMOVE,
+            CascadeType.REFRESH
+        },
+        orphanRemoval = true)
     private Set<PlaySet> playsets;
 
     /**

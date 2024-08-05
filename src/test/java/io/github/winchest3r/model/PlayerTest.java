@@ -1,12 +1,17 @@
 package io.github.winchest3r.model;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.Session;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.schema.Action;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+
+import io.github.winchest3r.utils.TestingData;
 
 public class PlayerTest {
     /**
@@ -18,8 +23,11 @@ public class PlayerTest {
     /** Entity Manager for model testing. */
     private static SessionFactory sessionFactory;
 
-    @BeforeAll
-    static void establishPersistentConnection() {
+    /**
+     * Establish session before each tests.
+     */
+    @BeforeEach
+    public void establishPersistentConnection() {
         sessionFactory = new Configuration()
             .addAnnotatedClass(Player.class)
             .addAnnotatedClass(Match.class)
@@ -37,13 +45,47 @@ public class PlayerTest {
             .setProperty(AvailableSettings.SHOW_SQL, true)
             .setProperty(AvailableSettings.FORMAT_SQL, true)
             .setProperty(AvailableSettings.HIGHLIGHT_SQL, true)
+            // Loading SQL script
+            .setProperty(AvailableSettings.JAKARTA_HBM2DDL_LOAD_SCRIPT_SOURCE,
+                "sql/tennis-test-dataset.sql")
             // Create a new SessionFactory
             .buildSessionFactory();
     }
 
+    /** */
     @Test
-    void connectionIsEstablished() {
-        assertNotNull(sessionFactory);
-        assertTrue(sessionFactory.isOpen());
+    public void connectionIsEstablished() {
+        try (Session session = sessionFactory.openSession()) {
+            assertNotNull(session);
+            assertTrue(session.isOpen());
+        }
+    }
+
+    /** */
+    @Test
+    public void canGetPlayers() {
+        try (Session session = sessionFactory.openSession()) {
+            List<Player> players =
+                session.createSelectionQuery("from Player", Player.class)
+                    .getResultList();
+            assertEquals(TestingData.PLAYERS.size(), players.size());
+            for (Player p : players) {
+                assertTrue(TestingData.PLAYERS.contains(p.getName()));
+            }
+        }
+    }
+
+    // TODO insert new player
+
+    // TODO delete player
+
+    // TODO update player
+
+    /** */
+    @AfterEach
+    public void closeSession() {
+        if (sessionFactory.isOpen()) {
+            sessionFactory.close();
+        }
     }
 }

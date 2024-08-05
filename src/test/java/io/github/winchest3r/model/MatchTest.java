@@ -1,5 +1,6 @@
 package io.github.winchest3r.model;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
@@ -17,8 +18,11 @@ public class MatchTest {
     /** Entity Manager for model testing. */
     private static SessionFactory sessionFactory;
 
-    @BeforeAll
-    static void establishPersistentConnection() {
+    /**
+     * Establish session before each tests.
+     */
+    @BeforeEach
+    public void establishPersistentConnection() {
         sessionFactory = new Configuration()
             .addAnnotatedClass(Player.class)
             .addAnnotatedClass(Match.class)
@@ -30,13 +34,27 @@ public class MatchTest {
             .setProperty(AvailableSettings.SHOW_SQL, true)
             .setProperty(AvailableSettings.FORMAT_SQL, true)
             .setProperty(AvailableSettings.HIGHLIGHT_SQL, true)
+            // Loading SQL script
+            .setProperty(AvailableSettings.JAKARTA_HBM2DDL_LOAD_SCRIPT_SOURCE,
+                "sql/tennis-test-dataset.sql")
             // Create a new SessionFactory
             .buildSessionFactory();
     }
 
+    /** */
     @Test
-    void connectionIsEstablished() {
-        assertNotNull(sessionFactory);
-        assertTrue(sessionFactory.isOpen());
+    public void connectionIsEstablished() {
+        try (Session session = sessionFactory.openSession()) {
+            assertNotNull(session);
+            assertTrue(session.isOpen());
+        }
+    }
+
+    /** */
+    @AfterEach
+    public void closeSession() {
+        if (sessionFactory.isOpen()) {
+            sessionFactory.close();
+        }
     }
 }
