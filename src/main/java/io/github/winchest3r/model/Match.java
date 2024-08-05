@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.Set;
 
 @Entity
-@Table(name = "match", indexes = {
+@Table(name = "Match", indexes = {
     @Index(name = "matchUuid_index", columnList = "matchUuid", unique = true)
 })
 public class Match {
@@ -27,6 +27,7 @@ public class Match {
     @JoinColumn(
         name = "playerOneId",
         referencedColumnName = "playerId",
+        foreignKey = @ForeignKey(name = "MatchPlayerOneForeignKey"),
         nullable = false)
     private Player playerOne;
 
@@ -35,12 +36,17 @@ public class Match {
     @JoinColumn(
         name = "playerTwoId",
         referencedColumnName = "playerId",
+        foreignKey = @ForeignKey(name = "MatchPlayerTwoForeignKey"),
         nullable = false)
     private Player playerTwo;
 
     /** Winner player or null if match is ongoing. */
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "winnerId", referencedColumnName = "playerId")
+    @JoinColumn(
+        name = "winnerId",
+        referencedColumnName = "playerId",
+        foreignKey = @ForeignKey(name = "MatchWinnerForeignKey")
+    )
     private Player winner;
 
     /** Sets that are associated with the match. */

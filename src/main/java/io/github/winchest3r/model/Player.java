@@ -7,7 +7,7 @@ import java.util.UUID;
 import java.util.Objects;
 
 @Entity
-@Table(name = "player", indexes = {
+@Table(name = "Player", indexes = {
     @Index(name = "playerUuid_index", columnList = "playerUuid", unique = true)
 })
 public class Player {

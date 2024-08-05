@@ -7,7 +7,7 @@ import java.util.UUID;
 import java.util.Set;
 
 @Entity
-@Table(name = "playset", indexes = {
+@Table(name = "Playset", indexes = {
     @Index(
         name = "playsetUuid_index",
         columnList = "playsetUuid",
@@ -23,7 +23,10 @@ public class PlaySet {
 
     /** Match that is connected to the set. */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "matchId", nullable = false)
+    @JoinColumn(
+        name = "matchId",
+        nullable = false,
+        foreignKey = @ForeignKey(name = "PlaysetMatchForeignKey"))
     private Match match;
 
     /** Playset UUID. */

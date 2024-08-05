@@ -6,7 +6,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "game", indexes = {
+@Table(name = "Game", indexes = {
     @Index(name = "gameUuid_index", columnList = "gameUuid", unique = true)
 })
 public class Game {
@@ -24,7 +24,10 @@ public class Game {
 
     /** Playset related to the game. */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "playsetId", nullable = false)
+    @JoinColumn(
+        name = "playsetId",
+        nullable = false,
+        foreignKey = @ForeignKey(name = "GamePlaysetForeignKey"))
     private PlaySet playset;
 
     /** Time of game starting. */
