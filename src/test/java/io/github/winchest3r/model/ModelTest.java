@@ -12,10 +12,15 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.random.RandomGenerator;
+import java.util.List;
 
 import io.github.winchest3r.utils.TestingData;
 
-public class PlayerTest {
+/**
+ * Cases for direct model testing without
+ * service through Hibernate's SessionFactory.
+ */
+public class ModelTest {
     /**
      * Url to testing database.
      */
@@ -71,7 +76,11 @@ public class PlayerTest {
                 session.createSelectionQuery("from Player", Player.class);
             assertEquals(TestingData.PLAYERS.size(), query.getResultCount());
             for (Player p : query.getResultList()) {
-                assertTrue(TestingData.PLAYERS.contains(p.getName()));
+                assertTrue(TestingData.PLAYERS
+                    .stream()
+                    .anyMatch(
+                        testPlayer -> p.getName().equals(testPlayer.name())
+                    ));
             }
         }
     }
@@ -84,17 +93,17 @@ public class PlayerTest {
                 RandomGenerator
                     .getDefault()
                     .nextInt(TestingData.PLAYERS.size());
-            String samplePlayerName = TestingData.PLAYERS.get(randIdx);
+            var samplePlayerName = TestingData.PLAYERS.get(randIdx);
 
             Player player = session
                 .createSelectionQuery(
                     "from Player where name = ?1",
                     Player.class)
-                .setParameter(1, samplePlayerName)
+                .setParameter(1, samplePlayerName.name())
                 .getSingleResultOrNull();
 
             assertNotNull(player);
-            assertEquals(player.getName(), samplePlayerName);
+            assertEquals(player.getName(), samplePlayerName.name());
         }
     }
 
@@ -134,7 +143,7 @@ public class PlayerTest {
     /** */
     @Test
     public void deleteExistingPlayer() {
-        String playerName = TestingData.PLAYERS.get(1);
+        var playerName = TestingData.PLAYERS.get(1);
         try (Session session = sessionFactory.openSession()) {
             var tx = session.getTransaction();
             try {
@@ -142,7 +151,7 @@ public class PlayerTest {
                 MutationQuery query = session.createMutationQuery(
                     "delete Player where name = ?1"
                 );
-                query.setParameter(1, playerName);
+                query.setParameter(1, playerName.name());
                 int res = query.executeUpdate();
                 tx.commit();
                 assertEquals(res, 1);
@@ -156,7 +165,7 @@ public class PlayerTest {
                 .createSelectionQuery(
                     "from Player where name = ?1",
                     Player.class)
-                .setParameter(1, playerName);
+                .setParameter(1, playerName.name());
             Player newPlayer = query.getSingleResultOrNull();
 
             assertNull(newPlayer);
@@ -166,7 +175,7 @@ public class PlayerTest {
     /** */
     @Test
     public void updateExistingPlayer() {
-        String playerName = TestingData.PLAYERS.get(2);
+        var playerName = TestingData.PLAYERS.get(2);
         String newName = "Super Player";
         try (Session session = sessionFactory.openSession()) {
             var tx = session.getTransaction();
@@ -176,7 +185,7 @@ public class PlayerTest {
                     .createSelectionQuery(
                         "from Player where name = ?1",
                         Player.class)
-                    .setParameter(1, playerName)
+                    .setParameter(1, playerName.name())
                     .getSingleResult();
                 player.setName(newName);
                 tx.commit();
@@ -196,6 +205,44 @@ public class PlayerTest {
             assertNotNull(newNamePlayer);
             assertEquals(newName, newNamePlayer.getName());
         }
+    }
+
+    /** */
+    @Test
+    public void canGetMatches() {
+        try (Session session = sessionFactory.openSession()) {
+            SelectionQuery<Match> query =
+                session.createSelectionQuery("from Match", Match.class);
+            List<Match> matches = query.getResultList();
+            assertEquals(matches.size(), TestingData.MATCHES_COUNT);
+        }
+    }
+
+    /** */
+    @Test
+    public void canAddNewMatch() {
+        long id1 = TestingData.PLAYERS.get(0).id();
+        long id2 = TestingData.PLAYERS.get(1).id();
+
+        sessionFactory.inTransaction(session -> {
+            Player playerZero = session.find(Player.class, id1);
+            assertNotNull(playerZero);
+            Player playerOne = session.find(Player.class, id2);
+            assertNotNull(playerOne);
+
+            Match match = new Match();
+            match.setPlayerOne(playerZero);
+            match.setPlayerTwo(playerOne);
+
+            session.persist(match);
+        });
+        sessionFactory.inSession(session -> {
+            Match match = session
+                .createSelectionQuery("from Match where id = ?1", Match.class)
+                .setParameter(1, 1)
+                .getSingleResultOrNull();
+            assertNotNull(match);
+        });
     }
 
     /** */

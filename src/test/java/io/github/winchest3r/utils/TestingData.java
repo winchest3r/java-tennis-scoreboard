@@ -6,6 +6,13 @@ import java.util.List;
  * Contains information from sql\tennis-test-dataset.sql.
  */
 public final class TestingData {
+    /**
+     * Simple Player class.
+     * @param id number
+     * @param name string
+     */
+    public static record Player(long id, String name) { }
+
     private TestingData() { }
 
     /** */
@@ -20,11 +27,11 @@ public final class TestingData {
     /** */
     public static final int GAMES_COUNT = 61;
 
-    /** Player's list with indexes related to playerId from dataset. */
-    public static final List<String> PLAYERS = List.of(
-        "Player Zero",
-        "Player One",
-        "Player Two",
-        "Player Three"
+    /** Player's list with ids related to playerId from dataset. */
+    public static final List<Player> PLAYERS = List.of(
+        new Player(10000, "Player Zero"),
+        new Player(10000, "Player One"),
+        new Player(10000, "Player Two"),
+        new Player(10000, "Player Three")
     );
 }
