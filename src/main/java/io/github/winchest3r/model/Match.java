@@ -27,8 +27,13 @@ public class Match {
     @JoinColumn(
         name = "playerOneId",
         referencedColumnName = "playerId",
-        foreignKey = @ForeignKey(name = "MatchPlayerOneForeignKey"),
-        nullable = false)
+        nullable = false,
+        foreignKey = @ForeignKey(
+            name = "MatchPlayerOneForeignKey",
+            foreignKeyDefinition =
+                "FOREIGN KEY (playerOneId) "
+                + "REFERENCES Player (playerId) "
+                + "ON DELETE CASCADE ON UPDATE CASCADE"))
     private Player playerOne;
 
     /** Player associated with second player of the set. */
@@ -36,8 +41,13 @@ public class Match {
     @JoinColumn(
         name = "playerTwoId",
         referencedColumnName = "playerId",
-        foreignKey = @ForeignKey(name = "MatchPlayerTwoForeignKey"),
-        nullable = false)
+        nullable = false,
+        foreignKey = @ForeignKey(
+            name = "MatchPlayerTwoForeignKey",
+            foreignKeyDefinition =
+                "FOREIGN KEY (playerTwoId) "
+                + "REFERENCES Player (playerId) "
+                + "ON DELETE CASCADE ON UPDATE CASCADE"))
     private Player playerTwo;
 
     /** Winner player or null if match is ongoing. */

@@ -27,7 +27,12 @@ public class Game {
     @JoinColumn(
         name = "playsetId",
         nullable = false,
-        foreignKey = @ForeignKey(name = "GamePlaysetForeignKey"))
+        foreignKey = @ForeignKey(
+            name = "GamePlaysetForeignKey",
+            foreignKeyDefinition =
+                "FOREIGN KEY (playsetId) "
+                + "REFERENCES Playset (playsetId) "
+                + "ON DELETE CASCADE ON UPDATE CASCADE"))
     private PlaySet playset;
 
     /** Time of game starting. */

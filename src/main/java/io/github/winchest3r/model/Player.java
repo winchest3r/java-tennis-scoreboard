@@ -34,7 +34,14 @@ public class Player {
     private String name;
 
     /** Set of player's winner matches. */
-    @OneToMany(mappedBy = Match_.WINNER)
+    @OneToMany(
+        mappedBy = Match_.WINNER,
+        cascade = {
+            CascadeType.PERSIST,
+            CascadeType.REMOVE,
+            CascadeType.REFRESH
+        },
+        orphanRemoval = true)
     private Set<Match> matchesWon;
 
     /**

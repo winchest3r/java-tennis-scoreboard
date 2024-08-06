@@ -26,7 +26,12 @@ public class PlaySet {
     @JoinColumn(
         name = "matchId",
         nullable = false,
-        foreignKey = @ForeignKey(name = "PlaysetMatchForeignKey"))
+        foreignKey = @ForeignKey(
+            name = "PlaysetMatchForeignKey",
+            foreignKeyDefinition =
+                "FOREIGN KEY (matchId) "
+                + "REFERENCES Match (matchId) "
+                + "ON DELETE CASCADE ON UPDATE CASCADE"))
     private Match match;
 
     /** Playset UUID. */
