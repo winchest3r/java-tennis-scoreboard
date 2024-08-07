@@ -1,6 +1,7 @@
 package io.github.winchest3r.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Generated;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -14,7 +15,7 @@ import java.util.Set;
         unique = true
     )
 })
-public class PlaySet {
+public class Playset {
     /** Set id that is related to database. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +40,7 @@ public class PlaySet {
         name = "playsetUuid",
         columnDefinition = "uuid default random_uuid()"
     )
+    @Generated
     private UUID uuid;
 
     /** Datetime with timezone to indicate set beginning. */
@@ -185,8 +187,8 @@ public class PlaySet {
         if (this == other) {
             return true;
         }
-        return other instanceof PlaySet
-            && ((PlaySet) other).uuid.equals(this.uuid);
+        return other instanceof Playset
+            && ((Playset) other).uuid.equals(this.uuid);
     }
 
     /** */

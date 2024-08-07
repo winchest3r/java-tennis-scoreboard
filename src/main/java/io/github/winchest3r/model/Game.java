@@ -1,6 +1,7 @@
 package io.github.winchest3r.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Generated;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -20,6 +21,7 @@ public class Game {
     @Column(
         name = "gameUuid",
         columnDefinition = "uuid default random_uuid()")
+    @Generated
     private UUID uuid;
 
     /** Playset related to the game. */
@@ -33,7 +35,7 @@ public class Game {
                 "FOREIGN KEY (playsetId) "
                 + "REFERENCES Playset (playsetId) "
                 + "ON DELETE CASCADE ON UPDATE CASCADE"))
-    private PlaySet playset;
+    private Playset playset;
 
     /** Time of game starting. */
     @Column(
@@ -86,7 +88,7 @@ public class Game {
      * Get playset related to the game.
      * @return Playset related to the game.
      */
-    public PlaySet getPlayset() {
+    public Playset getPlayset() {
         return this.playset;
     }
 
@@ -94,7 +96,7 @@ public class Game {
      * Set new playset related to the game.
      * @param newPlayset New playset related to the game.
      */
-    public void setPlayset(final PlaySet newPlayset) {
+    public void setPlayset(final Playset newPlayset) {
         this.playset = newPlayset;
     }
 
@@ -152,7 +154,7 @@ public class Game {
         if (this == other) {
             return true;
         }
-        return other instanceof PlaySet
+        return other instanceof Playset
             && ((Game) other).uuid.equals(this.uuid);
     }
 

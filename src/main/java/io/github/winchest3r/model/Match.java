@@ -1,6 +1,7 @@
 package io.github.winchest3r.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Generated;
 
 import java.util.UUID;
 import java.util.Set;
@@ -20,6 +21,7 @@ public class Match {
     @Column(
         name = "matchUuid",
         columnDefinition = "uuid default random_uuid()")
+    @Generated
     private UUID uuid;
 
     /** Player associated with first player of the set. */
@@ -61,14 +63,14 @@ public class Match {
 
     /** Sets that are associated with the match. */
     @OneToMany(
-        mappedBy = PlaySet_.MATCH,
+        mappedBy = Playset_.MATCH,
         cascade = {
             CascadeType.PERSIST,
             CascadeType.REMOVE,
             CascadeType.REFRESH
         },
         orphanRemoval = true)
-    private Set<PlaySet> playsets;
+    private Set<Playset> playsets;
 
     /**
      * Get match id.
@@ -106,7 +108,7 @@ public class Match {
      * Get sets associated with the match.
      * @return Set of sets.
      */
-    public java.util.Set<PlaySet> getPlaysets() {
+    public java.util.Set<Playset> getPlaysets() {
         return this.playsets;
     }
 
@@ -114,7 +116,7 @@ public class Match {
      * Set new sets that is associated with the match.
      * @param newPlaysets New set of sets.
      */
-    public void setPlaysets(final Set<PlaySet> newPlaysets) {
+    public void setPlaysets(final Set<Playset> newPlaysets) {
         this.playsets = newPlaysets;
     }
 

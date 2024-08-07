@@ -2,6 +2,7 @@ package io.github.winchest3r.model;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.SelectionQuery;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.random.RandomGenerator;
 import java.util.List;
+import java.util.UUID;
 
 import io.github.winchest3r.utils.TestingData;
 
@@ -38,7 +40,7 @@ public class ModelTest {
         sessionFactory = new Configuration()
             .addAnnotatedClass(Player.class)
             .addAnnotatedClass(Match.class)
-            .addAnnotatedClass(PlaySet.class)
+            .addAnnotatedClass(Playset.class)
             .addAnnotatedClass(Game.class)
             // H2
             .setProperty(AvailableSettings.JAKARTA_JDBC_URL, TEST_URL)
@@ -136,6 +138,10 @@ public class ModelTest {
             Player newPlayer = query.getSingleResultOrNull();
 
             assertNotNull(newPlayer);
+            assertNotNull(newPlayer.getId());
+            assertNotNull(newPlayer.getUuid());
+            assertNotNull(newPlayer.getMatchesWon());
+
             assertEquals(playerName, newPlayer.getName());
         }
     }
@@ -224,26 +230,222 @@ public class ModelTest {
         long id1 = TestingData.PLAYERS.get(0).id();
         long id2 = TestingData.PLAYERS.get(1).id();
 
-        sessionFactory.inTransaction(session -> {
-            Player playerZero = session.find(Player.class, id1);
-            assertNotNull(playerZero);
-            Player playerOne = session.find(Player.class, id2);
-            assertNotNull(playerOne);
+        Match match = null;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction tx = session.getTransaction();
+            try {
+                tx.begin();
 
-            Match match = new Match();
-            match.setPlayerOne(playerZero);
-            match.setPlayerTwo(playerOne);
+                Player playerZero = session.find(Player.class, id1);
+                assertNotNull(playerZero);
+                Player playerOne = session.find(Player.class, id2);
+                assertNotNull(playerOne);
 
-            session.persist(match);
-        });
-        sessionFactory.inSession(session -> {
-            Match match = session
+                match = new Match();
+                match.setPlayerOne(playerZero);
+                match.setPlayerTwo(playerOne);
+
+                session.persist(match);
+
+                tx.commit();
+            } catch (Exception ex) {
+                if (tx.isActive()) {
+                    tx.rollback();
+                }
+                throw ex;
+            }
+        }
+
+        assertNotNull(match.getId());
+        assertNotNull(match.getUuid());
+
+        try (Session session = sessionFactory.openSession()) {
+            Match newMatch = session
                 .createSelectionQuery("from Match where id = ?1", Match.class)
                 .setParameter(1, 1)
                 .getSingleResultOrNull();
+
+            assertNotNull(newMatch.getPlayerOne());
+            assertNotNull(newMatch.getPlayerTwo());
+            assertNotNull(newMatch.getPlaysets());
+
+            assertTrue(match.equals(newMatch));
+            assertEquals(match.hashCode(), newMatch.hashCode());
+        }
+    }
+
+    /** */
+    @Test
+    public void canDeleteMatch() {
+        var sampleMatch = TestingData.MATCHES.get(2);
+        sessionFactory.inTransaction(session -> {
+            Match match = session.find(Match.class, sampleMatch.id());
             assertNotNull(match);
+
+            session.remove(match);
+        });
+        sessionFactory.inSession(session -> {
+            long matchesSize = session
+                .createSelectionQuery("from Match", Match.class)
+                .getResultCount();
+            assertEquals(matchesSize, TestingData.MATCHES.size() - 1);
         });
     }
+
+    /** */
+    @Test
+    public void canUpdateMatch() {
+        var sampleMatch = TestingData.MATCHES.get(1);
+        try (Session session = sessionFactory.openSession()) {
+            Transaction tx = session.getTransaction();
+            UUID newUuid = UUID.randomUUID();
+            try {
+                tx.begin();
+
+                Match match = session.find(Match.class, sampleMatch.id());
+                assertNotNull(match);
+
+                match.setUuid(newUuid);
+                tx.commit();
+            } catch (Exception ex) {
+                if (tx.isActive()) {
+                    tx.rollback();
+                }
+                throw ex;
+            }
+            Match updatedMatch = session.find(Match.class, sampleMatch.id());
+
+            assertNotNull(updatedMatch);
+            assertEquals(updatedMatch.getUuid(), newUuid);
+        }
+    }
+
+    /** */
+    @Test
+    public void canGetPlaysets() {
+        sessionFactory.inSession(session -> {
+            long size = session
+                .createSelectionQuery("from Playset", Playset.class)
+                .getResultCount();
+
+            assertEquals(size, TestingData.PLAYSETS.size());
+        });
+    }
+
+    /** */
+    @Test
+    public void canInsertPlayset() {
+        Playset playset = null;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction tx = session.getTransaction();
+            try {
+                tx.begin();
+
+                Match match = session
+                    .find(Match.class, TestingData.MATCHES.get(2).id());
+
+                assertNotNull(match);
+
+                playset = new Playset();
+                playset.setMatch(match);
+                playset.setPlayerOneSetScore(0);
+                playset.setPlayerTwoSetScore(0);
+
+                session.persist(playset);
+
+                tx.commit();
+            } catch (Exception ex) {
+                if (tx.isActive()) {
+                    tx.rollback();
+                }
+                throw ex;
+            }
+
+            assertNotNull(playset.getId());
+            assertNotNull(playset.getUuid());
+
+            Playset newPlayset = session
+                .createSelectionQuery(
+                    "from Playset where id = ?1",
+                    Playset.class)
+                .setParameter(1, playset.getId())
+                .getSingleResultOrNull();
+
+            assertNotNull(newPlayset);
+
+            assertTrue(playset.equals(newPlayset));
+            assertEquals(playset.hashCode(), newPlayset.hashCode());
+        }
+    }
+
+    // TODO Check playset delete
+
+    // TODO Check playset update
+
+    /** */
+    @Test
+    public void canGetGames() {
+        sessionFactory.inSession(session -> {
+            long size = session
+                .createSelectionQuery("from Game", Game.class)
+                .getResultCount();
+
+            assertEquals(size, TestingData.GAMES.size());
+        });
+    }
+
+    /** */
+    @Test
+    public void canInsertGames() {
+        Game game = null;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction tx = session.getTransaction();
+            try {
+                tx.begin();
+
+                Playset playset = session
+                    .find(
+                        Playset.class,
+                        TestingData.PLAYSETS
+                            .get(TestingData.PLAYSETS_COUNT - 1).id());
+
+                assertNotNull(playset);
+
+                game = new Game();
+                game.setPlayset(playset);
+                game.setPlayerOneGameScore(0);
+                game.setPlayerTwoSetScore(0);
+
+                session.persist(game);
+
+                tx.commit();
+            } catch (Exception ex) {
+                if (tx.isActive()) {
+                    tx.rollback();
+                }
+                throw ex;
+            }
+
+            assertNotNull(game.getId());
+            assertNotNull(game.getUuid());
+
+            Game newGame = session
+                .createSelectionQuery(
+                    "from Game where id = ?1",
+                    Game.class)
+                .setParameter(1, game.getId())
+                .getSingleResultOrNull();
+
+            assertNotNull(newGame);
+
+            assertTrue(game.equals(newGame));
+            assertEquals(game.hashCode(), newGame.hashCode());
+        }
+    }
+
+    // TODO Check game delete
+
+    // TODO Check game update
 
     /** */
     @AfterEach

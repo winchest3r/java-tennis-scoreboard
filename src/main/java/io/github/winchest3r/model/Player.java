@@ -1,6 +1,7 @@
 package io.github.winchest3r.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Generated;
 
 import java.util.Set;
 import java.util.UUID;
@@ -21,6 +22,7 @@ public class Player {
     @Column(
         name = "playerUuid",
         columnDefinition = "uuid default random_uuid()")
+    @Generated
     private UUID uuid;
 
     /** As said. */
