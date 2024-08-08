@@ -144,7 +144,7 @@ public class Game {
      * Set new game score for player two.
      * @param newPlayerTwoGameScore New game score for player two.
      */
-    public void setPlayerTwoSetScore(final Integer newPlayerTwoGameScore) {
+    public void setPlayerTwoGameScore(final Integer newPlayerTwoGameScore) {
         this.playerTwoGameScore = newPlayerTwoGameScore;
     }
 

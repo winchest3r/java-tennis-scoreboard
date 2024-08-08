@@ -63,7 +63,7 @@ public class ModelTest {
 
     /** */
     @Test
-    public void connectionIsEstablished() {
+    public void establishConnection() {
         try (Session session = sessionFactory.openSession()) {
             assertNotNull(session);
             assertTrue(session.isOpen());
@@ -72,7 +72,7 @@ public class ModelTest {
 
     /** */
     @Test
-    public void canGetPlayers() {
+    public void getExistingPlayers() {
         try (Session session = sessionFactory.openSession()) {
             SelectionQuery<Player> query =
                 session.createSelectionQuery("from Player", Player.class);
@@ -89,7 +89,7 @@ public class ModelTest {
 
     /** */
     @Test
-    public void canFindPlayer() {
+    public void getOneExistingPlayer() {
         try (Session session = sessionFactory.openSession()) {
             int randIdx =
                 RandomGenerator
@@ -215,7 +215,7 @@ public class ModelTest {
 
     /** */
     @Test
-    public void canGetMatches() {
+    public void getExistingMatches() {
         try (Session session = sessionFactory.openSession()) {
             SelectionQuery<Match> query =
                 session.createSelectionQuery("from Match", Match.class);
@@ -226,7 +226,7 @@ public class ModelTest {
 
     /** */
     @Test
-    public void canAddNewMatch() {
+    public void addNewMatch() {
         long id1 = TestingData.PLAYERS.get(0).id();
         long id2 = TestingData.PLAYERS.get(1).id();
 
@@ -276,7 +276,7 @@ public class ModelTest {
 
     /** */
     @Test
-    public void canDeleteMatch() {
+    public void deleteExistingMatch() {
         var sampleMatch = TestingData.MATCHES.get(2);
         sessionFactory.inTransaction(session -> {
             Match match = session.find(Match.class, sampleMatch.id());
@@ -285,16 +285,27 @@ public class ModelTest {
             session.remove(match);
         });
         sessionFactory.inSession(session -> {
-            long matchesSize = session
+            long matchesCount = session
                 .createSelectionQuery("from Match", Match.class)
                 .getResultCount();
-            assertEquals(matchesSize, TestingData.MATCHES.size() - 1);
+            assertEquals(matchesCount, TestingData.MATCHES.size() - 1);
+
+            long playsetsCount = session
+                .createSelectionQuery("from Playset", Playset.class)
+                .getResultCount();
+            assertEquals(
+                TestingData.PLAYSETS
+                    .stream()
+                    .filter(p -> !p.matchId().equals(sampleMatch.id()))
+                    .count(),
+                    playsetsCount
+            );
         });
     }
 
     /** */
     @Test
-    public void canUpdateMatch() {
+    public void updateExistingMatch() {
         var sampleMatch = TestingData.MATCHES.get(1);
         try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.getTransaction();
@@ -322,7 +333,7 @@ public class ModelTest {
 
     /** */
     @Test
-    public void canGetPlaysets() {
+    public void getExistingPlaysets() {
         sessionFactory.inSession(session -> {
             long size = session
                 .createSelectionQuery("from Playset", Playset.class)
@@ -334,7 +345,7 @@ public class ModelTest {
 
     /** */
     @Test
-    public void canInsertPlayset() {
+    public void insertNewPlayset() {
         Playset playset = null;
         try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.getTransaction();
@@ -378,13 +389,86 @@ public class ModelTest {
         }
     }
 
-    // TODO Check playset delete
+    /** */
+    @Test
+    public void deleteExistingPlayset() {
+        var samplePlayset = TestingData.PLAYSETS.get(2);
 
-    // TODO Check playset update
+        sessionFactory.inTransaction(session -> {
+            int res = session
+                .createMutationQuery("delete Playset where id = ?1")
+                .setParameter(1, samplePlayset.id())
+                .executeUpdate();
+            assertEquals(res, 1);
+        });
+
+        sessionFactory.inSession(session -> {
+            long count = session
+                .createSelectionQuery("from Playset", Playset.class)
+                .getResultCount();
+            assertEquals(count, TestingData.PLAYSETS.size() - 1);
+
+            long countGames = session
+                .createSelectionQuery("from Game", Game.class)
+                .getResultCount();
+            assertEquals(
+                TestingData.GAMES
+                    .stream()
+                    .filter(g -> !g.playsetId().equals(samplePlayset.id()))
+                    .count(),
+                countGames
+            );
+
+            Match match = session.find(Match.class, samplePlayset.matchId());
+            assertEquals(
+                TestingData.PLAYSETS
+                .stream()
+                .filter(p -> p.matchId() == match.getId().longValue())
+                .count() - 1, match.getPlaysets().size()
+            );
+        });
+    }
 
     /** */
     @Test
-    public void canGetGames() {
+    public void updateExistingPlayset() {
+        var samplePlayset = TestingData.PLAYSETS.getLast();
+        UUID newUuid = UUID.randomUUID();
+        try (Session session = sessionFactory.openSession()) {
+            Transaction tx = session.getTransaction();
+            try {
+                tx.begin();
+
+                Playset playset = session
+                    .find(Playset.class, samplePlayset.id());
+                playset.setUuid(newUuid);
+                playset.setPlayerOneSetScore(
+                playset.getPlayerOneSetScore() + 1);
+
+                tx.commit();
+            } catch (Exception ex) {
+                if (tx.isActive()) {
+                    tx.rollback();
+                    throw ex;
+                }
+            }
+
+            Playset playset = session
+                .createSelectionQuery(
+                    "from Playset where id = ?1", Playset.class)
+                .setParameter(1, samplePlayset.id())
+                .getSingleResultOrNull();
+            assertNotNull(playset);
+            assertEquals(playset.getUuid(), newUuid);
+            assertEquals(
+                samplePlayset.playerOneSetScore() + 1,
+                playset.getPlayerOneSetScore());
+        }
+    }
+
+    /** */
+    @Test
+    public void getExistingGames() {
         sessionFactory.inSession(session -> {
             long size = session
                 .createSelectionQuery("from Game", Game.class)
@@ -396,7 +480,7 @@ public class ModelTest {
 
     /** */
     @Test
-    public void canInsertGames() {
+    public void insertNewGame() {
         Game game = null;
         try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.getTransaction();
@@ -414,7 +498,7 @@ public class ModelTest {
                 game = new Game();
                 game.setPlayset(playset);
                 game.setPlayerOneGameScore(0);
-                game.setPlayerTwoSetScore(0);
+                game.setPlayerTwoGameScore(0);
 
                 session.persist(game);
 
@@ -443,9 +527,51 @@ public class ModelTest {
         }
     }
 
-    // TODO Check game delete
+    /** */
+    @Test
+    public void deleteExistingGame() {
+        var sampleGame = TestingData.GAMES.getLast();
+        sessionFactory.inTransaction(session -> {
+            Game game = session.find(Game.class, sampleGame.id());
+            session.remove(game);
+        });
+        sessionFactory.inSession(session -> {
+            long count = session
+                .createSelectionQuery("from Game", Game.class)
+                .getResultCount();
+            assertEquals(TestingData.GAMES.size() - 1, count);
 
-    // TODO Check game update
+            Playset playset = session
+                .find(Playset.class, sampleGame.playsetId());
+            assertEquals(
+                TestingData.GAMES
+                    .stream()
+                    .filter(g -> g.playsetId() == playset.getId().longValue())
+                    .count() - 1,
+                    playset.getGames().size()
+            );
+        });
+    }
+
+    /** */
+    @Test
+    public void updateExistingGame() {
+        var sampleGame = TestingData.GAMES.getLast();
+        UUID newUuid = UUID.randomUUID();
+        final int newPlayerOneGameScore = 4;
+        final int newPlayerTwoGameScore = 2;
+        sessionFactory.inTransaction(session -> {
+            Game game = session.find(Game.class, sampleGame.id());
+            game.setUuid(newUuid);
+            game.setPlayerOneGameScore(newPlayerOneGameScore);
+            game.setPlayerTwoGameScore(newPlayerTwoGameScore);
+        });
+        sessionFactory.inSession(session -> {
+            Game game = session.find(Game.class, sampleGame.id());
+            assertEquals(newPlayerOneGameScore, game.getPlayerOneGameScore());
+            assertEquals(newPlayerTwoGameScore, game.getPlayerTwoGameScore());
+        });
+    }
 
     /** */
     @AfterEach
