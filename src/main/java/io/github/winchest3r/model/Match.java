@@ -152,6 +152,22 @@ public class Match {
         this.playerTwo = newPlayerTwo;
     }
 
+    /**
+     * Get winner player or null if match is ongoing.
+     * @return Winner player or null.
+     */
+    public Player getWinner() {
+        return this.winner;
+    }
+
+    /**
+     * Set winner player.
+     * @param player Player
+     */
+    public void setWinner(final Player player) {
+        this.winner = player;
+    }
+
     /** */
     @Override
     public boolean equals(final Object other) {
