@@ -8,6 +8,8 @@ import org.hibernate.tool.schema.Action;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.UUID;
+
 import io.github.winchest3r.model.*;
 import io.github.winchest3r.utils.TestingData;
 
@@ -65,6 +67,44 @@ public class PlayerServiceTest {
                 localP -> p.getName().equals(localP.name())
             ));
         }
+    }
+
+    /** */
+    @Test
+    public void getPlayerByUuid() {
+        var samplePlayer = TestingData.PLAYERS.getFirst();
+        // Need to find initialized sample player.
+        sessionFactory.inSession(session -> {
+            Player player = session.find(Player.class, samplePlayer.id());
+            Player playerFromService = playerService
+                .getPlayerByUuid(player.getUuid());
+            assertNotNull(playerFromService);
+        });
+    }
+
+    /** */
+    @Test
+    public void getPlayerByUnavailableUuid() {
+        Player player = playerService.getPlayerByUuid(UUID.randomUUID());
+        assertNull(player);
+    }
+
+    /** */
+    @Test
+    public void addNewPlayer() {
+        final String name = "New Player";
+        Player newPlayer = playerService.addNewPlayer(name);
+        assertNotNull(newPlayer);
+        assertEquals(name, newPlayer.getName());
+        assertNotNull(newPlayer.getId());
+        final String uuidPattern =
+            "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$";
+        assertTrue(newPlayer
+            .getUuid()
+            .toString()
+            .toLowerCase()
+            .matches(uuidPattern)
+        );
     }
 
     /** */
