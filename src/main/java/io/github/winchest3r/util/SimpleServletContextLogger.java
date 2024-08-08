@@ -1,4 +1,4 @@
-package io.github.winchest3r.utils;
+package io.github.winchest3r.util;
 
 import jakarta.servlet.ServletContext;
 

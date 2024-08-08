@@ -13,8 +13,7 @@ import org.hibernate.*;
 import org.hibernate.cfg.*;
 
 import io.github.winchest3r.model.Player;
-
-import io.github.winchest3r.utils.SimpleServletContextLogger;
+import io.github.winchest3r.util.SimpleServletContextLogger;
 
 /**
  * Servlet to show all players.
