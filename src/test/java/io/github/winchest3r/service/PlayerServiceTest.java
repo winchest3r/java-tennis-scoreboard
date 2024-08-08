@@ -29,8 +29,8 @@ public class PlayerServiceTest {
     /**
      * Establish session before each tests.
      */
-    @BeforeAll
-    public static void establishPersistentConnection() {
+    @BeforeEach
+    public void establishPersistentConnection() {
         sessionFactory = new Configuration()
             .addAnnotatedClass(Player.class)
             .addAnnotatedClass(Match.class)
@@ -108,8 +108,8 @@ public class PlayerServiceTest {
     }
 
     /** */
-    @AfterAll
-    public static void closeSession() {
+    @AfterEach
+    public void closeSession() {
         if (sessionFactory.isOpen()) {
             sessionFactory.close();
         }
