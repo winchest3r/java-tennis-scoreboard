@@ -10,13 +10,14 @@ import org.hibernate.query.MutationQuery;
 import org.hibernate.tool.schema.Action;
 
 import org.junit.jupiter.api.*;
+
+import io.github.winchest3r.util.TestingData;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.random.RandomGenerator;
 import java.util.List;
 import java.util.UUID;
-
-import io.github.winchest3r.utils.TestingData;
 
 /**
  * Cases for direct model testing without

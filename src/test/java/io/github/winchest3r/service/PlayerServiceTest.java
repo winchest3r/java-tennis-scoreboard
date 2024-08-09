@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.UUID;
 
 import io.github.winchest3r.model.*;
-import io.github.winchest3r.utils.TestingData;
+import io.github.winchest3r.util.TestingData;
 
 public class PlayerServiceTest {
     /**
