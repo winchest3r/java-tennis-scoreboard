@@ -48,6 +48,7 @@ public class Playset {
         name = "startTimestamp",
         columnDefinition =
             "timestamp(6) with time zone default current_timestamp()")
+    @Generated
     private OffsetDateTime startTime;
 
     /** First player set score. */

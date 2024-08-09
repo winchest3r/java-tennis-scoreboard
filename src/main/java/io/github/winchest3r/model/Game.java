@@ -42,6 +42,7 @@ public class Game {
         name = "startTimestamp",
         columnDefinition =
             "timestamp(6) with time zone default current_timestamp()")
+    @Generated
     private OffsetDateTime startTime;
 
     /** Player one game score. */
@@ -154,7 +155,7 @@ public class Game {
         if (this == other) {
             return true;
         }
-        return other instanceof Playset
+        return other instanceof Game
             && ((Game) other).uuid.equals(this.uuid);
     }
 

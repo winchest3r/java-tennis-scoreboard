@@ -11,7 +11,6 @@ import java.util.List;
 import io.github.winchest3r.util.HibernateUtil;
 import io.github.winchest3r.model.Playset;
 import io.github.winchest3r.model.Match;
-import io.github.winchest3r.model.Player;
 
 public class PlaysetService {
     /** Session factory. */
@@ -39,16 +38,34 @@ public class PlaysetService {
      * @return List of playsets.
      */
     public List<Playset> getPlaysetsByMatch(final Match match) {
-        // TODO
+        List<Playset> result;
+        try (Session session = sessionFactory.openSession()) {
+            result = session
+                .createSelectionQuery(
+                    "from Playset where match = ?1",
+                    Playset.class)
+                .setParameter(1, match)
+                .getResultList();
+        }
+        return result;
     }
 
     /**
      * Get playset using it's UUID.
      * @param uuid Playset's UUID.
-     * @return Playset.
+     * @return Playset or null.
      */
     public Playset getPlaysetByUuid(final UUID uuid) {
-        // TODO
+        Playset result;
+        try (Session session = sessionFactory.openSession()) {
+            result = session
+                .createSelectionQuery(
+                    "from Playset where uuid = ?1",
+                    Playset.class)
+                .setParameter(1, uuid)
+                .getSingleResultOrNull();
+        }
+        return result;
     }
 
     /**
@@ -57,19 +74,52 @@ public class PlaysetService {
      * @return Initialized new playset.
      */
     public Playset addNewPlayset(final Match match) {
-        // TODO
+        Playset result;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction tx = session.getTransaction();
+            try {
+                tx.begin();
+
+                result = new Playset();
+                result.setMatch(match);
+                result.setPlayerOneSetScore(0);
+                result.setPlayerTwoSetScore(0);
+                session.persist(result);
+
+                tx.commit();
+            } catch (Exception ex) {
+                if (tx.isActive()) {
+                    tx.rollback();
+                }
+                throw ex;
+            }
+        }
+        return result;
     }
 
     /**
-     * Change set score of selected player.
-     * @param match Selected match.
-     * @param player Selected player.
-     * @param score New score of selected player.
+     * Change set score of player one.
+     * @param playset Selected playset.
+     * @param score New score of player one.
      */
-    public void setNewSetScore(
-            final Match match,
-            final Player player,
+    public void setPlayerOneSetScore(
+            final Playset playset,
             final Integer score) {
-        // TODO
+        sessionFactory.inTransaction(session -> {
+            playset.setPlayerOneSetScore(score);
+        });
+    }
+
+    /**
+     * Change set score of player two.
+     * @param playset Selected playset.
+     * @param score New score of player two.
+     */
+    public void setPlayerTwoSetScore(
+            final Playset playset,
+            final Integer score) {
+        sessionFactory.inTransaction(session -> {
+            playset.setPlayerTwoSetScore(score);
+        });
     }
 }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.UUID;
+import java.util.List;
 
 import io.github.winchest3r.model.*;
 import io.github.winchest3r.utils.TestingData;
@@ -58,14 +59,93 @@ public class PlaysetServiceTest {
     }
 
     /* TODO
-     * Testing of:
-     * getPlaysetsByMatch
-     * getPlaysetByUuid
-     * getPlaysetByUnavailableUuid
-     * addNewPlayset
-     * setNewPlayerScore
-     * setNewScoreForUnacceptedPlayer
+     * setPlayerOneSetScore
+     * setPlayerTwoSetScore
      */
+
+    /** */
+    @Test
+    public void getPlaysetsByMatch() {
+        var sampleMatch = TestingData.MATCHES.getFirst();
+        sessionFactory.inSession(session -> {
+            Match match = session.find(Match.class, sampleMatch.id());
+            assertNotNull(match);
+
+            List<Playset> playsets = playsetService.getPlaysetsByMatch(match);
+
+            assertNotNull(playsets);
+            assertEquals(TestingData.PLAYSETS
+                .stream()
+                .filter(p -> p.matchId().intValue() == sampleMatch.id())
+                .count(),
+            playsets.size());
+        });
+    }
+
+    /** */
+    @Test
+    public void getPlaysetByUuid() {
+        var samplePlayset = TestingData.PLAYSETS.get(1);
+        sessionFactory.inSession(session -> {
+            Playset playset = session.find(Playset.class, samplePlayset.id());
+            assertNotNull(playset);
+
+            Playset playsetFromUuid =
+                playsetService.getPlaysetByUuid(playset.getUuid());
+            assertNotNull(playsetFromUuid);
+
+            assertEquals(playset, playsetFromUuid);
+        });
+    }
+
+    /** */
+    @Test
+    public void getPlaysetByUnavailableUuid() {
+        UUID uuid = UUID.randomUUID();
+        sessionFactory.inSession(session -> {
+            Playset playset = playsetService.getPlaysetByUuid(uuid);
+            assertNull(playset);
+        });
+    }
+
+    /** */
+    @Test
+    public void addNewPlayset() {
+        var sampleMatch = TestingData.MATCHES.getLast();
+        sessionFactory.inTransaction(session -> {
+            Match match = session.find(Match.class, sampleMatch.id());
+            assertNotNull(match);
+
+            Playset playset = playsetService.addNewPlayset(match);
+
+            assertNotNull(playset);
+            assertNotNull(playset.getId());
+            assertNotNull(playset.getUuid());
+            assertNotNull(playset.getStartTime());
+            assertNotNull(playset.getMatch());
+            assertNotNull(playset.getMatch().getUuid());
+        });
+    }
+
+    /** */
+    @Test
+    public void setPlayersSetScore() {
+        var samplePlayset = TestingData.PLAYSETS.getLast();
+        final int playerOneScore = 3;
+        final int playerTwoScore = 5;
+        sessionFactory.inTransaction(session -> {
+            Playset playset = session.find(Playset.class, samplePlayset.id());
+            assertNotNull(playset);
+
+            playsetService.setPlayerOneSetScore(playset, playerOneScore);
+            playsetService.setPlayerTwoSetScore(playset, playerTwoScore);
+        });
+        sessionFactory.inSession(session -> {
+            Playset playset = session.find(Playset.class, samplePlayset.id());
+            assertEquals(playerOneScore, playset.getPlayerOneSetScore());
+            assertEquals(playerTwoScore, playset.getPlayerTwoSetScore());
+        });
+    }
 
     /** */
     @AfterEach
