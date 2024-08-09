@@ -126,4 +126,10 @@ public class Player {
     public int hashCode() {
         return Objects.hash(this.name, this.uuid);
     }
+
+    /** */
+    @Override
+    public String toString() {
+        return "[" + name + " : " + uuid + "]";
+    }
 }

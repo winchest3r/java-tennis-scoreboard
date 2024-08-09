@@ -10,6 +10,9 @@ import java.util.List;
 
 import io.github.winchest3r.util.HibernateUtil;
 import io.github.winchest3r.model.Game;
+import io.github.winchest3r.model.Playset;
+import io.github.winchest3r.model.Match;
+import io.github.winchest3r.model.Player;
 
 public class GameService {
     /** Session factory. */
@@ -29,5 +32,24 @@ public class GameService {
      */
     public GameService(final SessionFactory newSessionFactory) {
         this.sessionFactory = Objects.requireNonNull(newSessionFactory);
+    }
+
+    public List<Game> getGamesByPlayset(final Playset playset) {
+        // TODO
+    }
+
+    public Game getGameByUuid(final UUID uuid) {
+        // TODO
+    }
+
+    public addNewGame(final Playset playset) {
+        // TODO
+    }
+
+    public setNewGameScore(
+            final Playset playset,
+            final Player player,
+            final Integer score) {
+        // TODO
     }
 }

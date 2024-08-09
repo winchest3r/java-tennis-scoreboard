@@ -196,4 +196,12 @@ public class Playset {
     public int hashCode() {
         return this.uuid.hashCode();
     }
+
+    /** */
+    @Override
+    public String toString() {
+        return "[Playset of [Match : " + match.getUuid() + "] ("
+            + playerOneSetScore + "-" + playerTwoSetScore
+            + ") : " + uuid + "]";
+    }
 }

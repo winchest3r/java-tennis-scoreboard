@@ -57,6 +57,16 @@ public class GameServiceTest {
         gameService = new GameService(sessionFactory);
     }
 
+    /* TODO
+     * Testing of:
+     * getGameByPlayset
+     * getGameByUuid
+     * getGameByUnavailableUuid
+     * addNewGame
+     * setNewGameScore
+     * setNewGameScoreUnacceptedPlayer
+     */
+
     /** */
     @AfterEach
     public void closeSession() {

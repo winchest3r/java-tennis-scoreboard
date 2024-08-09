@@ -163,4 +163,12 @@ public class Game {
     public int hashCode() {
         return this.uuid.hashCode();
     }
+
+    /** */
+    @Override
+    public String toString() {
+        return "[Game of [Playset : " + playset.getUuid() + "] ("
+            + playerOneGameScore + "-" + playerTwoGameScore
+            + ") : " + uuid + "]";
+    }
 }

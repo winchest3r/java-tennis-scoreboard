@@ -25,7 +25,7 @@ public class Match {
     private UUID uuid;
 
     /** Player associated with first player of the set. */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
         name = "playerOneId",
         referencedColumnName = "playerId",
@@ -39,7 +39,7 @@ public class Match {
     private Player playerOne;
 
     /** Player associated with second player of the set. */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
         name = "playerTwoId",
         referencedColumnName = "playerId",
@@ -53,7 +53,7 @@ public class Match {
     private Player playerTwo;
 
     /** Winner player or null if match is ongoing. */
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(
         name = "winnerId",
         referencedColumnName = "playerId",
@@ -182,5 +182,11 @@ public class Match {
     @Override
     public int hashCode() {
         return this.uuid.hashCode();
+    }
+
+    /** */
+    @Override
+    public String toString() {
+        return "[Match " + playerOne + "vs" + playerTwo + " : " + uuid + "]";
     }
 }

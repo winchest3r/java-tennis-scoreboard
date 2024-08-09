@@ -57,6 +57,16 @@ public class PlaysetServiceTest {
             playsetService = new PlaysetService(sessionFactory);
     }
 
+    /* TODO
+     * Testing of:
+     * getPlaysetsByMatch
+     * getPlaysetByUuid
+     * getPlaysetByUnavailableUuid
+     * addNewPlayset
+     * setNewPlayerScore
+     * setNewScoreForUnacceptedPlayer
+     */
+
     /** */
     @AfterEach
     public void closeSession() {

@@ -124,7 +124,7 @@ public class MatchServiceTest {
     public void getMatchesByNullPlayerWithException() {
         sessionFactory.inSession(session -> {
             assertThrows(NullPointerException.class, () -> {
-                List<Match> matches = matchService.getMatchesByPlayer(null);
+                matchService.getMatchesByPlayer(null);
             });
         });
     }
@@ -148,6 +148,45 @@ public class MatchServiceTest {
             assertNotNull(match.getId());
             assertNotNull(match.getUuid());
             assertNull(match.getWinner());
+        });
+    }
+
+    /** */
+    @Test
+    public void setMatchWinner() {
+        var sampleMatch = TestingData.MATCHES.getLast();
+        sessionFactory.inSession(session -> {
+            Match match = session.find(Match.class, sampleMatch.id());
+
+            assertNotNull(match);
+            assertNotNull(match.getPlayerOne());
+            assertNotNull(match.getPlayerTwo());
+            assertNull(match.getWinner());
+
+            matchService.setMatchWinner(match, match.getPlayerOne());
+            assertNotNull(match.getWinner());
+            assertEquals(match.getPlayerOne(), match.getWinner());
+        });
+    }
+
+    /** */
+    @Test
+    public void setWrongMatchWinner() {
+        var sampleMatch = TestingData.MATCHES.getLast();
+        var samplePlayer = TestingData.PLAYERS.getFirst();
+        sessionFactory.inSession(session -> {
+            Match match = session.find(Match.class, sampleMatch.id());
+            Player player = session.find(Player.class, samplePlayer.id());
+
+            assertNotNull(match);
+            assertNull(match.getWinner());
+
+            assertNotEquals(player, match.getPlayerOne());
+            assertNotEquals(player, match.getPlayerTwo());
+
+            assertThrows(IllegalArgumentException.class, () -> {
+                matchService.setMatchWinner(match, player);
+            });
         });
     }
 

@@ -109,4 +109,23 @@ public class MatchService {
         }
         return result;
     }
+
+    /**
+     * Set winner player of match.
+     * @param match Selected match.
+     * @param player One of the players of this match.
+     * @throws IllegalArgumentException if wrong player selected as winner.
+     */
+    public void setMatchWinner(final Match match, final Player player) {
+        if (!match.getPlayerOne().equals(player)
+                && !match.getPlayerTwo().equals(player)) {
+            throw new IllegalArgumentException(
+                player + " is not related to " + match
+            );
+        }
+
+        sessionFactory.inTransaction(session -> {
+            match.setWinner(player);
+        });
+    }
 }
