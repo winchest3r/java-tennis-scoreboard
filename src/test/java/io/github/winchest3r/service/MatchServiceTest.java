@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.UUID;
+import java.util.List;
 
 import io.github.winchest3r.model.*;
 import io.github.winchest3r.utils.TestingData;
@@ -57,8 +58,98 @@ public class MatchServiceTest {
         matchService = new MatchService(sessionFactory);
     }
 
-    // TODO Add tests for getMatches,
-    // TODO getMatchByUuid, getMatchesByPlayer, addNewMatch
+    /** */
+    @Test
+    public void getMatches() {
+        sessionFactory.inSession(session -> {
+            List<Match> matches = matchService.getMatches();
+            assertNotNull(matches);
+            assertEquals(TestingData.MATCHES.size(), matches.size());
+            for (Match m : matches) {
+                assertTrue(TestingData.MATCHES.stream().anyMatch(sampleM ->
+                    sampleM.playerOneId()
+                        == m.getPlayerOne().getId().longValue()
+                    && sampleM.playerTwoId()
+                        == m.getPlayerTwo().getId().longValue()
+                ));
+            }
+        });
+    }
+
+    /** */
+    @Test
+    public void getMatchByUuid() {
+        var sampleMatch = TestingData.MATCHES.getLast();
+        sessionFactory.inSession(session -> {
+            Match match = session.find(Match.class, sampleMatch.id());
+            assertNotNull(match);
+
+            Match matchByUuid = matchService.getMatchByUuid(match.getUuid());
+            assertNotNull(matchByUuid);
+            assertEquals(match, matchByUuid);
+        });
+    }
+
+    /** */
+    @Test
+    public void getMatchByUnavailableUuid() {
+        final UUID uuid = UUID.randomUUID();
+        sessionFactory.inSession(session -> {
+            Match matchByUuid = matchService.getMatchByUuid(uuid);
+            assertNull(matchByUuid);
+        });
+    }
+
+    /** */
+    @Test
+    public void getMatchesByPlayer() {
+        var samplePlayer = TestingData.PLAYERS.get(1);
+        sessionFactory.inSession(session -> {
+            Player player = session.find(Player.class, samplePlayer.id());
+            List<Match> matches = matchService.getMatchesByPlayer(player);
+            assertNotNull(matches);
+            assertEquals(
+                TestingData.MATCHES
+                    .stream()
+                    .filter(m -> m.playerOneId() == samplePlayer.id()
+                        || m.playerTwoId() == samplePlayer.id())
+                    .count(),
+                matches.size()
+            );
+        });
+    }
+
+    /** */
+    @Test
+    public void getMatchesByNullPlayerWithException() {
+        sessionFactory.inSession(session -> {
+            assertThrows(NullPointerException.class, () -> {
+                List<Match> matches = matchService.getMatchesByPlayer(null);
+            });
+        });
+    }
+
+    /** */
+    @Test
+    public void addNewMatch() {
+        var p1 = TestingData.PLAYERS.getFirst();
+        var p2 = TestingData.PLAYERS.getLast();
+        sessionFactory.inTransaction(session -> {
+            Player playerOne = session.find(Player.class, p1.id());
+            assertNotNull(playerOne);
+            Player playerTwo = session.find(Player.class, p2.id());
+            assertNotNull(playerTwo);
+
+            Match match = matchService.addNewMatch(playerOne, playerTwo);
+            assertNotNull(match);
+
+            assertEquals(playerOne, match.getPlayerOne());
+            assertEquals(playerTwo, match.getPlayerTwo());
+            assertNotNull(match.getId());
+            assertNotNull(match.getUuid());
+            assertNull(match.getWinner());
+        });
+    }
 
     /** */
     @AfterEach

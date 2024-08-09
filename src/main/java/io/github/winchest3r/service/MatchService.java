@@ -72,9 +72,9 @@ public class MatchService {
         try (Session session = sessionFactory.openSession()) {
             result = session
                 .createSelectionQuery(
-                    "from Match where playerOneId = ?1 || playerTwoId = ?1",
+                    "from Match where playerOne = ?1 or playerTwo = ?1",
                     Match.class)
-                .setParameter(1, Objects.requireNonNull(player).getId())
+                .setParameter(1, Objects.requireNonNull(player))
                 .getResultList();
         }
         return result;

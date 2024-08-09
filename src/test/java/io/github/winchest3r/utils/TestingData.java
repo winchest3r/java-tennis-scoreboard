@@ -72,9 +72,9 @@ public final class TestingData {
     /** Player's list with ids related to playerId from dataset. */
     public static final List<Player> PLAYERS = List.of(
         new Player(10000, "Player Zero"),
-        new Player(10000, "Player One"),
-        new Player(10000, "Player Two"),
-        new Player(10000, "Player Three")
+        new Player(10001, "Player One"),
+        new Player(10002, "Player Two"),
+        new Player(10003, "Player Three")
     );
 
     /** Matches in test database. */
