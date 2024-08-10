@@ -101,5 +101,33 @@ public final class ScoreboardUtil {
         return 0;
     }
 
-    // TODO Tiebreaker score.
+    /**
+     * Get result of tiebreak using score parameters.
+     * Possible states are the same as tennis game rules.
+     * @param playerOneScore Positive value.
+     * @param playerTwoScore Positive value.
+     * @return -1 if player One won, 1 if player Two won
+     * and 0 if match is ongoing.
+     */
+    public static int tiebreakScoreResult(
+            final int playerOneScore,
+            final int playerTwoScore) {
+        if (playerOneScore < 0 || playerTwoScore < 0) {
+            throw new IllegalArgumentException(
+                "Tiebreak score can't be negative"
+            );
+        }
+        final int tiebreakScore = 7;
+        // If diff >= 2 and player One get 7.
+        if (playerOneScore >= tiebreakScore
+                && playerOneScore - playerTwoScore >= 2) {
+            return -1;
+        }
+        // If diff >= 2 and player Tow get 7.
+        if (playerTwoScore >= tiebreakScore
+                && playerTwoScore - playerOneScore >= 2) {
+            return 1;
+        }
+        return 0;
+    }
 }
