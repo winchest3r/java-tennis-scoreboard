@@ -14,8 +14,6 @@
         <properties>
 
             <!-- Database -->
-            <property name="jakarta.persistence.jdbc.url"
-                      value="jdbc:h2:./database" />
             <property name="jakarta.persistence.jdbc.user" 
                       value="sa" />
             <property name="jakarta.persistence.jdbc.password"
