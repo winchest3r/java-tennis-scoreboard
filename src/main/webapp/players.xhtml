@@ -5,26 +5,36 @@
     <h:head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="style.css" />
         <title>Tennis Players</title>
     </h:head>
     <h:body>
-        <h2>players</h2>
-        <h:dataTable id="playersTable" value="#{players.players}" var="p">
-            <h:column>
-                <f:facet name="header">Name</f:facet>
-                <h:outputText value="#{p.name}" />
-            </h:column>
-            <h:column>
-                <f:facet name="header">UUID</f:facet>
-                <h:outputText value="#{p.uuid}" />
-            </h:column>
-        </h:dataTable>
-        <h:form id="newPlayerForm">
-            <h2>add new player</h2>
-            <h:outputLabel for="newPlayerName" value="New player name: "/>
-            <h:inputText id="newPlayerName" value="#{players.newPlayerName}"/>
-            <br/>
-            <h:commandButton id="addPlayer" action="#{players.addNewPlayer}" value="add" />
-        </h:form>
+        <nav class="navbar">
+            <a href="./">home</a>
+            / <a href="matches">matches</a>
+            / <a href="new-match.xhtml">new match</a>
+            / <a href="players.xhtml">players</a>
+        </nav>
+        <div class="page">
+            <h2>players</h2>
+            <h:dataTable id="playersTable" value="#{players.players}" var="p">
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    <h:outputText value="#{p.name}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">UUID</f:facet>
+                    <h:outputText value="#{p.uuid}" />
+                </h:column>
+            </h:dataTable>
+            <h:form id="newPlayerForm">
+                <h2>add new player</h2>
+                <h:outputLabel for="newPlayerName" value="New player name: "/>
+                <h:inputText id="newPlayerName" value="#{players.newPlayerName}"/>
+                <h:message for="newPlayerName" errorStyle="color: red"/>
+                <br/>
+                <h:commandButton id="addPlayer" action="#{players.addNewPlayer}" value="add" />
+            </h:form>
+        </div>
     </h:body>
 </html>

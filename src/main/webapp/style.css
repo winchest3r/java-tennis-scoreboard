@@ -1,0 +1,14 @@
+body {
+    width: 70%;
+    margin: auto auto;
+}
+
+.navbar {
+    background-color: aliceblue;
+    padding: 10px;
+    padding-bottom: 20px;
+}
+
+.page {
+    margin: 10px;
+}

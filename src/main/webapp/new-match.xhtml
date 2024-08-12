@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+    <h:head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="style.css" />
+        <title>Tennis Home</title>
+    </h:head>
+    <h:body>
+        <nav class="navbar">
+            <a href="./">home</a>
+            / <a href="matches">matches</a>
+            / <a href="new-match.xhtml">new match</a>
+            / <a href="players.xhtml">players</a>
+        </nav>
+        <div class="page">
+            <h2>add new match</h2>
+            <p>
+                Tennis match between two players consists of sets and games.<br/>
+                The winner should win 2 sets. Every set should end with minimun 6 games with difference by 2 to win.<br/>
+                If players got 6-6 in games - tiebreak is played. Every game ends with minimum 4 rounds with difference by 2 to win.
+            </p>
+            <h:form id="newMatchForm">
+                <h:message for="newMatchForm" errorStyle="color: red"/>
+                <br/>
+                Player One:
+                <h:selectOneMenu id="playerOneSelection" value="#{newMatch.playerOne}">
+                    <f:selectItems
+                        value="#{newMatch.players}"
+                        var="p"
+                        itemValue="#{p}"
+                        itemLabel="#{p.name} [#{p.uuid}]"/>
+                </h:selectOneMenu>
+                Player Two:
+                <h:selectOneMenu id="playerTwoSelection" value="#{newMatch.playerTwo}">
+                    <f:selectItems
+                        value="#{newMatch.players}"
+                        var="p"
+                        itemValue="#{p}"
+                        itemLabel="#{p.name} [#{p.uuid}]"/>
+                </h:selectOneMenu>
+                <br/>
+                <h:commandButton id="addNewMatch" action="#{newMatch.addNewMatch}" value="add new match" />
+            </h:form>
+        </div>
+    </h:body>
+</html>
