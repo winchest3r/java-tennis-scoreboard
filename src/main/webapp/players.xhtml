@@ -9,7 +9,7 @@
     </h:head>
     <h:body>
         <h2>players</h2>
-        <h:dataTable value="#{players.players}" var="p">
+        <h:dataTable id="playersTable" value="#{players.players}" var="p">
             <h:column>
                 <f:facet name="header">Name</f:facet>
                 <h:outputText value="#{p.name}" />
@@ -19,5 +19,12 @@
                 <h:outputText value="#{p.uuid}" />
             </h:column>
         </h:dataTable>
+        <h:form id="newPlayerForm">
+            <h2>add new player</h2>
+            <h:outputLabel for="newPlayerName" value="New player name: "/>
+            <h:inputText id="newPlayerName" value="#{players.newPlayerName}"/>
+            <br/>
+            <h:commandButton id="addPlayer" action="#{players.addNewPlayer}" value="add" />
+        </h:form>
     </h:body>
 </html>
