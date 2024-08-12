@@ -17,14 +17,13 @@ public class Players implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /** Player Service. */
-    private PlayerService playerService;
+    private static PlayerService playerService = new PlayerService();
 
     /** New player name field. */
     private String newPlayerName;
 
     /** Init constructor. */
     public Players() {
-        playerService = new PlayerService();
         playerService.addNewPlayer("John Smith");
         playerService.addNewPlayer("Mike Vazovsky");
         playerService.addNewPlayer("Lara Parker");

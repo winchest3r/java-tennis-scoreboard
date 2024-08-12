@@ -16,25 +16,25 @@
             / <a href="players.xhtml">players</a>
         </nav>
         <div class="page">
-            <h2>players</h2>
-            <h:dataTable id="playersTable" value="#{players.players}" var="p">
+            <h2>matches</h2>
+            <h:dataTable id="matchesTable" value="#{matches.matches}" var="m">
                 <h:column>
                     <f:facet name="header">UUID</f:facet>
-                    <h:outputText value="#{p.uuid}" />
+                    <h:outputText value="#{m.uuid}"/>
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Name</f:facet>
-                    <h:outputText value="#{p.name}" />
+                    <f:facet name="header">Player One</f:facet>
+                    <h:outputText value="#{m.playerOne.name}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Player Two</f:facet>
+                    <h:outputText value="#{m.playerTwo.name}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Winner</f:facet>
+                    <h:outputText value="#{m.winner == null ? 'ONGOING' : m.winner.name}"/>
                 </h:column>
             </h:dataTable>
-            <h:form id="newPlayerForm">
-                <h2>add new player</h2>
-                <h:outputLabel for="newPlayerName" value="New player name: "/>
-                <h:inputText id="newPlayerName" value="#{players.newPlayerName}"/>
-                <h:message for="newPlayerName" errorStyle="color: red"/>
-                <br/>
-                <h:commandButton id="addPlayer" action="#{players.addNewPlayer}" value="add" />
-            </h:form>
         </div>
     </h:body>
 </html>
