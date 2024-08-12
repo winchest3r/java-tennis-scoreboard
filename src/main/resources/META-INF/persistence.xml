@@ -13,11 +13,15 @@
 
         <properties>
 
+            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <!-- Database -->
             <property name="jakarta.persistence.jdbc.user" 
                       value="sa" />
             <property name="jakarta.persistence.jdbc.password"
                       value="" />
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false"/>
             
             <!-- Automatic schema export -->
             <property name="jakarta.persistence.schema-generation.database.action"
@@ -27,6 +31,7 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.highlight_sql" value="true"/>
+            <property name="hibernate.generate_statistics" value="true"/>
         </properties>
 
     </persistence-unit>

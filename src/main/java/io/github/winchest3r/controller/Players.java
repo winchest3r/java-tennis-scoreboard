@@ -1,6 +1,5 @@
 package io.github.winchest3r.controller;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Named;
 
@@ -24,9 +23,8 @@ public class Players implements Serializable {
     /** New player name field. */
     private String newPlayerName;
 
-    /** Initialization method. */
-    @PostConstruct
-    public void init() {
+    /** Init constructor. */
+    public Players() {
         playerService.addNewPlayer("John Smith");
         playerService.addNewPlayer("Mike Vazovsky");
         playerService.addNewPlayer("Lara Parker");

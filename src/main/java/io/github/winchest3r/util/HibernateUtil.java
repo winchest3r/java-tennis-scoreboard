@@ -26,6 +26,9 @@ public final class HibernateUtil {
                 .addAnnotatedClass(Playset.class)
                 .addAnnotatedClass(Game.class)
                 .setProperty(
+                    AvailableSettings.DIALECT, "org.hibernate.dialect.H2Dialect"
+                )
+                .setProperty(
                     AvailableSettings.JAKARTA_JDBC_DRIVER,
                     "org.h2.Driver")
                 .setProperty(
