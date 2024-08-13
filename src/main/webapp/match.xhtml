@@ -18,8 +18,30 @@
         <h:panelGroup class="page" layout="block" rendered="#{match.match != null}">
             <h2>match</h2>
             <h:outputText value="#{match.match.playerOne.name} vs #{match.match.playerTwo.name}"/>
+            <h3>playsets</h3>
+            <h:dataTable id="setsTable" value="#{match.sets}" var="p">
+                <h:column>
+                    <f:facet name="header">UUID</f:facet>
+                    <h:outputText value="#{p.uuid}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Start Time</f:facet>
+                    <h:outputText value="#{p.startTime}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{match.match.playerOne.name} score</f:facet>
+                    <h:outputText value="#{p.playerOneSetScore}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{match.match.playerTwo.name} score</f:facet>
+                    <h:outputText value="#{p.playerTwoSetScore}"/>
+                </h:column>
+            </h:dataTable>
+            <h:form id="startNewSetForm">
+                <h:commandButton id="startNewSet" action="#{match.startNewSet}" value="start new set"/>
+            </h:form>
         </h:panelGroup>
-        <h:panelGroup class="page" layout="block" rendered="#{match.match == null}">
+        <h:panelGroup class="page" layout="block" rendered="#{match.match eq null}">
             <h2>match</h2>
             <h:outputText value="Can't find match."/>
         </h:panelGroup>

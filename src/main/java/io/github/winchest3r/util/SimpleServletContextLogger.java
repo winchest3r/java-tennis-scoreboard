@@ -1,13 +1,13 @@
 package io.github.winchest3r.util;
 
-import jakarta.servlet.ServletContext;
+import jakarta.faces.context.ExternalContext;
 
 public class SimpleServletContextLogger {
     /** Class to message for. */
     private Class<?> cl;
 
     /** Servlet context to get context logger. */
-    private ServletContext context;
+    private ExternalContext context;
 
     /**
      * Constructor with class and context.
@@ -15,7 +15,7 @@ public class SimpleServletContextLogger {
      * @param objClass class
      */
     public SimpleServletContextLogger(
-            final ServletContext servletContext,
+            final ExternalContext servletContext,
             final Class<?> objClass) {
         this.cl = objClass;
         this.context = servletContext;

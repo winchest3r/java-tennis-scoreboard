@@ -99,8 +99,6 @@ public class NewMatch {
                 )
             );
         } else {
-            System.out.println(playerOne);
-            System.out.println(playerTwo);
             Matcher p1m = pattern.matcher(playerOne);
             Matcher p2m = pattern.matcher(playerTwo);
             if (p1m.matches() && p2m.matches()) {
@@ -119,6 +117,8 @@ public class NewMatch {
                 Match match = scoreboardService
                     .match()
                     .addNewMatch(playerOneModel, playerTwoModel);
+
+                System.out.println(match + " added. Start to redirect.");
 
                 FacesContext context = FacesContext.getCurrentInstance();
                 context

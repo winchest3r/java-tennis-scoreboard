@@ -7,7 +7,7 @@
 
     <groupId>io.github.winchest3r</groupId>
     <artifactId>java-tennis-scoreboard</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.3.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>java-tennis-scoreboard Maven Webapp</name>
