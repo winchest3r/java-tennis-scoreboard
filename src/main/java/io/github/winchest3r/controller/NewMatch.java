@@ -11,9 +11,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.IOException;
 
 import io.github.winchest3r.service.ScoreboardService;
 import io.github.winchest3r.model.Player;
+import io.github.winchest3r.model.Match;
 
 @Named(value = "newMatch")
 @ApplicationScoped
@@ -79,7 +81,7 @@ public class NewMatch {
     }
 
     /** Add new match. */
-    public void addNewMatch() {
+    public void addNewMatch() throws IOException {
         if (playerOne == null || playerTwo == null) {
             FacesContext.getCurrentInstance().addMessage(
                 "newMatchForm",
@@ -114,9 +116,14 @@ public class NewMatch {
                         .getPlayerByUuid(
                             UUID.fromString(p2m.group(2)
                     ));
-                scoreboardService
+                Match match = scoreboardService
                     .match()
                     .addNewMatch(playerOneModel, playerTwoModel);
+
+                FacesContext context = FacesContext.getCurrentInstance();
+                context
+                    .getExternalContext()
+                    .redirect("match.xhtml?uuid=" + match.getUuid());
             }
         }
     }

@@ -10,10 +10,10 @@
     </h:head>
     <h:body>
         <nav class="navbar">
-            <a href="./">home</a>
-            / <a href="matches.xhtml">matches</a>
-            / <a href="new-match.xhtml">new match</a>
-            / <a href="players.xhtml">players</a>
+            <h:link value="home" outcome="index"/>
+            / <h:link value="matches" outcome="matches"/>
+            / <h:link value="new match" outcome="new-match"/>
+            / <h:link value="players" outcome="players"/>
         </nav>
         <div class="page">
             <h2>matches</h2>
@@ -33,6 +33,12 @@
                 <h:column>
                     <f:facet name="header">Winner</f:facet>
                     <h:outputText value="#{m.winner == null ? 'ONGOING' : m.winner.name}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Link</f:facet>
+                    <h:link value="view" outcome="match">
+                        <f:param name="uuid" value="#{m.uuid}"/>
+                    </h:link>
                 </h:column>
             </h:dataTable>
         </div>

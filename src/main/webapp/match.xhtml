@@ -15,5 +15,13 @@
             / <h:link value="new match" outcome="new-match"/>
             / <h:link value="players" outcome="players"/>
         </nav>
+        <h:panelGroup class="page" layout="block" rendered="#{match.match != null}">
+            <h2>match</h2>
+            <h:outputText value="#{match.match.playerOne.name} vs #{match.match.playerTwo.name}"/>
+        </h:panelGroup>
+        <h:panelGroup class="page" layout="block" rendered="#{match.match == null}">
+            <h2>match</h2>
+            <h:outputText value="Can't find match."/>
+        </h:panelGroup>
     </h:body>
 </html>
