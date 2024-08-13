@@ -37,7 +37,7 @@
                     <h:outputText value="#{p.playerTwoSetScore}"/>
                 </h:column>
             </h:dataTable>
-            <h:form id="startNewSetForm">
+            <h:form id="startNewSetForm" rendered="#{match.match.winner eq null and match.currentSet eq null}">
                 <h:commandButton id="startNewSet" action="#{match.startNewSet}" value="start new set"/>
             </h:form>
         </h:panelGroup>
