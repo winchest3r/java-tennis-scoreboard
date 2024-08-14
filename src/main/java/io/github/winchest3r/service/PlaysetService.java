@@ -106,7 +106,9 @@ public class PlaysetService {
             final Playset playset,
             final Integer score) {
         sessionFactory.inTransaction(session -> {
-            playset.setPlayerOneSetScore(score);
+            Playset managedPlayset = session
+                .get(Playset.class, playset.getId());
+            managedPlayset.setPlayerOneSetScore(score);
         });
     }
 
@@ -119,7 +121,9 @@ public class PlaysetService {
             final Playset playset,
             final Integer score) {
         sessionFactory.inTransaction(session -> {
-            playset.setPlayerTwoSetScore(score);
+            Playset managedPlayset = session
+                .get(Playset.class, playset.getId());
+            managedPlayset.setPlayerTwoSetScore(score);
         });
     }
 }

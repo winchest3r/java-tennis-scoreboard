@@ -125,7 +125,8 @@ public class MatchService {
         }
 
         sessionFactory.inTransaction(session -> {
-            match.setWinner(player);
+            Match managedMatch = session.get(Match.class, match.getId());
+            managedMatch.setWinner(player);
         });
     }
 }

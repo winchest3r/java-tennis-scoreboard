@@ -187,6 +187,6 @@ public class Match {
     /** */
     @Override
     public String toString() {
-        return "[Match " + playerOne + "vs" + playerTwo + " : " + uuid + "]";
+        return "[Match " + playerOne + " vs " + playerTwo + " : " + uuid + "]";
     }
 }

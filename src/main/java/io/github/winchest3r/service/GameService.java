@@ -104,7 +104,8 @@ public class GameService {
      */
     public void setPlayerOneGameScore(final Game game, final Integer score) {
         sessionFactory.inTransaction(session -> {
-            game.setPlayerOneGameScore(score);
+            Game managedGame = session.get(Game.class, game.getId());
+            managedGame.setPlayerOneGameScore(score);
         });
     }
 
@@ -115,7 +116,8 @@ public class GameService {
      */
     public void setPlayerTwoGameScore(final Game game, final Integer score) {
         sessionFactory.inTransaction(session -> {
-            game.setPlayerTwoGameScore(score);
+            Game managedGame = session.get(Game.class, game.getId());
+            managedGame.setPlayerTwoGameScore(score);
         });
     }
 }

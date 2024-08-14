@@ -25,7 +25,7 @@ public class Game {
     private UUID uuid;
 
     /** Playset related to the game. */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
         name = "playsetId",
         nullable = false,

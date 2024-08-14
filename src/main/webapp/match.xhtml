@@ -37,9 +37,23 @@
                     <h:outputText value="#{p.playerTwoSetScore}"/>
                 </h:column>
             </h:dataTable>
-            <h:form id="startNewSetForm" rendered="#{match.match.winner eq null and match.currentSet eq null}">
-                <h:commandButton id="startNewSet" action="#{match.startNewSet}" value="start new set"/>
-            </h:form>
+            <h:panelGroup class="newSetGroup" layout="block" rendered="#{match.match.winner eq null and match.currentSet eq null}">
+                <h:form id="startNewSetForm">
+                    <h:commandButton id="startNewSet" action="#{match.startNewSet}" value="start new set"/>
+                </h:form>
+            </h:panelGroup>
+            <h:panelGroup class="gameControlGroup" layout="block" rendered="#{match.match.winner eq null and match.currentSet ne null}">
+                <h:outputText value="#{match.currentGame}"/>
+                <br/>
+                <h:form id="gameScoreForm">
+                    <h:commandButton id="playerGameScoreOne" action="#{match.playerGameScore(-1)}" value="Score for #{match.match.playerOne.name}" />
+                    <h:commandButton id="playerGameScoreTwo" action="#{match.playerGameScore(1)}" value="Score for #{match.match.playerTwo.name}" />
+                </h:form>
+            </h:panelGroup>
+            <h:panelGroup class="winnerGroup" layout="block" rendered="#{match.match.winner ne null}">
+                <h2>results</h2>
+                <h:outputText value="#{match.match.winner.name} won in #{match.match}."/>
+            </h:panelGroup>
         </h:panelGroup>
         <h:panelGroup class="page" layout="block" rendered="#{match.match eq null}">
             <h2>match</h2>
