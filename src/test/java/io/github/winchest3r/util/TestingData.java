@@ -1,6 +1,7 @@
 package io.github.winchest3r.util;
 
 import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Contains information from sql\tennis-test-dataset.sql.
@@ -70,22 +71,22 @@ public final class TestingData {
     public static final int GAMES_COUNT = 61;
 
     /** Player's list with ids related to playerId from dataset. */
-    public static final List<Player> PLAYERS = List.of(
+    public static final List<Player> PLAYERS = new LinkedList<>(List.of(
         new Player(10000, "Player Zero"),
         new Player(10001, "Player One"),
         new Player(10002, "Player Two"),
         new Player(10003, "Player Three")
-    );
+    ));
 
     /** Matches in test database. */
-    public static final List<Match> MATCHES = List.of(
+    public static final List<Match> MATCHES = new LinkedList<>(List.of(
         new Match(9000, 10000, 10001, 10000),
         new Match(9001, 10002, 10003, 10002),
         new Match(9002, 10001, 10003, null)
-    );
+    ));
 
     /** Playsets in test database. */
-    public static final List<Playset> PLAYSETS = List.of(
+    public static final List<Playset> PLAYSETS = new LinkedList<>(List.of(
         new Playset(8000, 9000, 6, 2),
         new Playset(8001, 9000, 6, 3),
         new Playset(8002, 9001, 6, 2),
@@ -93,10 +94,10 @@ public final class TestingData {
         new Playset(8004, 9001, 7, 6),
         new Playset(8005, 9002, 5, 7),
         new Playset(8006, 9002, 0, 1)
-    );
+    ));
 
     /** Games in test database. */
-    public static final List<Game> GAMES = List.of(
+    public static final List<Game> GAMES = new LinkedList<>(List.of(
         new Game(7000, 8000, 4, 2),
         new Game(7001, 8000, 5, 3),
         new Game(7002, 8000, 4, 0),
@@ -158,5 +159,5 @@ public final class TestingData {
         new Game(7058, 8005, 2, 4),
         new Game(7059, 8005, 0, 4),
         new Game(7060, 8006, 0, 4)
-    );
+    ));
 }
