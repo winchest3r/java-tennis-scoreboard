@@ -71,7 +71,7 @@ public final class TestingData {
     public static final int GAMES_COUNT = 61;
 
     /** Player's list with ids related to playerId from dataset. */
-    public static final List<Player> PLAYERS = new LinkedList<>(List.of(
+    public static final LinkedList<Player> PLAYERS = new LinkedList<>(List.of(
         new Player(10000, "Player Zero"),
         new Player(10001, "Player One"),
         new Player(10002, "Player Two"),
@@ -79,14 +79,14 @@ public final class TestingData {
     ));
 
     /** Matches in test database. */
-    public static final List<Match> MATCHES = new LinkedList<>(List.of(
+    public static final LinkedList<Match> MATCHES = new LinkedList<>(List.of(
         new Match(9000, 10000, 10001, 10000),
         new Match(9001, 10002, 10003, 10002),
         new Match(9002, 10001, 10003, null)
     ));
 
     /** Playsets in test database. */
-    public static final List<Playset> PLAYSETS = new LinkedList<>(List.of(
+    public static final LinkedList<Playset> PLAYSETS = new LinkedList<>(List.of(
         new Playset(8000, 9000, 6, 2),
         new Playset(8001, 9000, 6, 3),
         new Playset(8002, 9001, 6, 2),
@@ -97,7 +97,7 @@ public final class TestingData {
     ));
 
     /** Games in test database. */
-    public static final List<Game> GAMES = new LinkedList<>(List.of(
+    public static final LinkedList<Game> GAMES = new LinkedList<>(List.of(
         new Game(7000, 8000, 4, 2),
         new Game(7001, 8000, 5, 3),
         new Game(7002, 8000, 4, 0),
