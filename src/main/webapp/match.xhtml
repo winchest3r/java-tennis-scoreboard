@@ -1,63 +1,76 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
       xmlns:f="jakarta.faces.core">
-    <h:head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="style.css" />
-        <title>Tennis Home</title>
-    </h:head>
     <h:body>
-        <nav class="navbar">
-            <h:link value="home" outcome="index"/>
-            / <h:link value="matches" outcome="matches"/>
-            / <h:link value="new match" outcome="new-match"/>
-            / <h:link value="players" outcome="players"/>
-        </nav>
-        <h:panelGroup class="page" layout="block" rendered="#{match.match != null}">
-            <h2>match</h2>
-            <h:outputText value="#{match.match.playerOne.name} vs #{match.match.playerTwo.name}"/>
-            <h3>playsets</h3>
-            <h:dataTable id="setsTable" value="#{match.sets}" var="p">
-                <h:column>
-                    <f:facet name="header">UUID</f:facet>
-                    <h:outputText value="#{p.uuid}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Start Time</f:facet>
-                    <h:outputText value="#{p.startTime}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">#{match.match.playerOne.name} score</f:facet>
-                    <h:outputText value="#{p.playerOneSetScore}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">#{match.match.playerTwo.name} score</f:facet>
-                    <h:outputText value="#{p.playerTwoSetScore}"/>
-                </h:column>
-            </h:dataTable>
-            <h:panelGroup class="newSetGroup" layout="block" rendered="#{match.match.winner eq null and match.currentSet eq null}">
-                <h:form id="startNewSetForm">
-                    <h:commandButton id="startNewSet" action="#{match.startNewSet}" value="start new set"/>
-                </h:form>
-            </h:panelGroup>
-            <h:panelGroup class="gameControlGroup" layout="block" rendered="#{match.match.winner eq null and match.currentSet ne null}">
-                <h:outputText value="#{match.currentGame}"/>
-                <br/>
-                <h:form id="gameScoreForm">
-                    <h:commandButton id="playerGameScoreOne" action="#{match.playerGameScore(-1)}" value="Score for #{match.match.playerOne.name}" />
-                    <h:commandButton id="playerGameScoreTwo" action="#{match.playerGameScore(1)}" value="Score for #{match.match.playerTwo.name}" />
-                </h:form>
-            </h:panelGroup>
-            <h:panelGroup class="winnerGroup" layout="block" rendered="#{match.match.winner ne null}">
-                <h2>results</h2>
-                <h:outputText value="#{match.match.winner.name} won in #{match.match}."/>
-            </h:panelGroup>
-        </h:panelGroup>
-        <h:panelGroup class="page" layout="block" rendered="#{match.match eq null}">
-            <h2>match</h2>
-            <h:outputText value="Can't find match."/>
-        </h:panelGroup>
+        <ui:composition template="./layout/layout.xhtml">
+            <ui:define name="top" />
+            <ui:define name="content">
+                <h:panelGroup class="main"
+                              layout="block"
+                              rendered="#{match.match != null}">
+                    <h2>match</h2>
+                    <h:outputText value="#{match.match.playerOne.name} vs #{match.match.playerTwo.name}"/>
+                    <h3>playsets</h3>
+                    <h:dataTable id="setsTable"
+                                 value="#{match.sets}"
+                                 var="p">
+                        <h:column>
+                            <f:facet name="header">UUID</f:facet>
+                            <h:outputText value="#{p.uuid}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Start Time</f:facet>
+                            <h:outputText value="#{p.startTime}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{match.match.playerOne.name} score</f:facet>
+                            <h:outputText value="#{p.playerOneSetScore}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{match.match.playerTwo.name} score</f:facet>
+                            <h:outputText value="#{p.playerTwoSetScore}"/>
+                        </h:column>
+                    </h:dataTable>
+                    <h:panelGroup class="newSetGroup"
+                                  layout="block"
+                                  rendered="#{match.match.winner eq null and match.currentSet eq null}">
+                        <h:form id="startNewSetForm">
+                            <h:commandButton id="startNewSet"
+                                             action="#{match.startNewSet}"
+                                             value="start new set"/>
+                        </h:form>
+                    </h:panelGroup>
+                    <h:panelGroup class="gameControlGroup"
+                                  layout="block"
+                                  rendered="#{match.match.winner eq null and match.currentSet ne null}">
+                        <h:outputText value="#{match.currentGame}"/>
+                        <br/>
+                        <h:form id="gameScoreForm">
+                            <h:commandButton id="playerGameScoreOne"
+                                             action="#{match.playerGameScore(-1)}"
+                                             value="Score for #{match.match.playerOne.name}" />
+                            <h:commandButton id="playerGameScoreTwo"
+                                             action="#{match.playerGameScore(1)}"
+                                             value="Score for #{match.match.playerTwo.name}" />
+                        </h:form>
+                    </h:panelGroup>
+                    <h:panelGroup class="winnerGroup"
+                                  layout="block"
+                                  rendered="#{match.match.winner ne null}">
+                        <h2>results</h2>
+                        <h:outputText value="#{match.match.winner.name} won in #{match.match}."/>
+                    </h:panelGroup>
+                </h:panelGroup>
+                <h:panelGroup class="no-match"
+                              layout="block"
+                              rendered="#{match.match eq null}">
+                    <h2>match</h2>
+                    <h:outputText value="Can't find match."/>
+                </h:panelGroup>
+            </ui:define>
+            <ui:define name="bottom" />
+        </ui:composition>
     </h:body>
 </html>

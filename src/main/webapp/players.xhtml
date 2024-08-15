@@ -1,40 +1,40 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
       xmlns:f="jakarta.faces.core">
-    <h:head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="style.css" />
-        <title>Tennis Players</title>
-    </h:head>
     <h:body>
-        <nav class="navbar">
-            <h:link value="home" outcome="index"/>
-            / <h:link value="matches" outcome="matches"/>
-            / <h:link value="new match" outcome="new-match"/>
-            / <h:link value="players" outcome="players"/>
-        </nav>
-        <div class="page">
-            <h2>players</h2>
-            <h:dataTable id="playersTable" value="#{players.players}" var="p">
-                <h:column>
-                    <f:facet name="header">UUID</f:facet>
-                    <h:outputText value="#{p.uuid}" />
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Name</f:facet>
-                    <h:outputText value="#{p.name}" />
-                </h:column>
-            </h:dataTable>
-            <h:form id="newPlayerForm">
-                <h2>add new player</h2>
-                <h:outputLabel for="newPlayerName" value="New player name: "/>
-                <h:inputText id="newPlayerName" value="#{players.newPlayerName}"/>
-                <h:message for="newPlayerName" errorStyle="color: red"/>
-                <br/>
-                <h:commandButton id="addPlayer" action="#{players.addNewPlayer}" value="add" />
-            </h:form>
-        </div>
+        <ui:composition template="./layout/layout.xhtml">
+            <ui:define name="top" />
+            <ui:define name="content">
+                <h2>players</h2>
+                <h:dataTable id="playersTable"
+                             value="#{players.players}"
+                             var="p">
+                    <h:column>
+                        <f:facet name="header">UUID</f:facet>
+                        <h:outputText value="#{p.uuid}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Name</f:facet>
+                        <h:outputText value="#{p.name}" />
+                    </h:column>
+                </h:dataTable>
+                <h:form id="newPlayerForm">
+                    <h2>add new player</h2>
+                    <h:outputLabel for="newPlayerName"
+                                   value="New player name: "/>
+                    <h:inputText id="newPlayerName"
+                                 value="#{players.newPlayerName}"/>
+                    <h:message for="newPlayerName"
+                               errorStyle="color: red"/>
+                    <br/>
+                    <h:commandButton id="addPlayer"
+                                     action="#{players.addNewPlayer}"
+                                     value="add" />
+                </h:form>
+            </ui:define>
+            <ui:define name="bottom" />
+        </ui:composition>
     </h:body>
 </html>
