@@ -7,7 +7,7 @@ import jakarta.faces.context.FacesContext;
 import java.util.UUID;
 import java.util.Map;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -32,7 +32,7 @@ public class Match implements Serializable {
     private io.github.winchest3r.model.Match match;
 
     /** Playsets related to match. */
-    private List<Playset> sets;
+    private LinkedList<Playset> sets;
 
     /** List of games that related to currentSet. */
     private List<Game> games;
@@ -62,7 +62,7 @@ public class Match implements Serializable {
         var matchPlaysets = scoreboardService
             .playset()
             .getPlaysetsByMatch(match);
-        sets = new ArrayList<>(matchPlaysets
+        sets = new LinkedList<>(matchPlaysets
             .stream()
             .sorted((a, b) ->
                 a.getStartTime().compareTo(b.getStartTime()))
