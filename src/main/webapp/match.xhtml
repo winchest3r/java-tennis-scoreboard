@@ -37,7 +37,8 @@
                                   layout="block"
                                   rendered="#{match.match.winner eq null and match.currentSet eq null}">
                         <h:form id="startNewSetForm">
-                            <h:commandButton id="startNewSet"
+                            <h:commandButton class="button-class"
+                                             id="startNewSet"
                                              action="#{match.startNewSet}"
                                              value="start new set"/>
                         </h:form>
@@ -45,13 +46,18 @@
                     <h:panelGroup class="gameControlGroup"
                                   layout="block"
                                   rendered="#{match.match.winner eq null and match.currentSet ne null}">
-                        <h:outputText value="#{match.currentGame}"/>
+                        <h3>game started #{match.currentGame.startTime}</h3>
+                        <h:outputText class="game-score" 
+                            value="#{match.match.playerOne.name} #{match.currentGame.playerOneGameScore} - 
+                            #{match.currentGame.playerTwoGameScore} #{match.match.playerTwo.name}"/>
                         <br/>
                         <h:form id="gameScoreForm">
-                            <h:commandButton id="playerGameScoreOne"
+                            <h:commandButton class="button-class"
+                                             id="playerGameScoreOne"
                                              action="#{match.playerGameScore(-1)}"
                                              value="Score for #{match.match.playerOne.name}" />
-                            <h:commandButton id="playerGameScoreTwo"
+                            <h:commandButton class="button-class"
+                                             id="playerGameScoreTwo"
                                              action="#{match.playerGameScore(1)}"
                                              value="Score for #{match.match.playerTwo.name}" />
                         </h:form>
