@@ -7,6 +7,7 @@ Based on [this](https://zhukovsd.github.io/java-backend-learning-course/projects
 Run with wildfly in docker:
 ```
 $ git clone https://github.com/winchest3r/java-tennis-scoreboard
+$ cd java-tennis-scoreboard
 $ docker build -t java-tennis-scoreboard .
 $ docker compose up
 
