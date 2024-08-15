@@ -1,46 +1,41 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
       xmlns:f="jakarta.faces.core">
-    <h:head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="style.css" />
-        <title>Tennis Players</title>
-    </h:head>
     <h:body>
-        <nav class="navbar">
-            <h:link value="home" outcome="index"/>
-            / <h:link value="matches" outcome="matches"/>
-            / <h:link value="new match" outcome="new-match"/>
-            / <h:link value="players" outcome="players"/>
-        </nav>
-        <div class="page">
-            <h2>matches</h2>
-            <h:dataTable id="matchesTable" value="#{matches.matches}" var="m">
-                <h:column>
-                    <f:facet name="header">UUID</f:facet>
-                    <h:outputText value="#{m.uuid}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Player One</f:facet>
-                    <h:outputText value="#{m.playerOne.name}" />
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Player Two</f:facet>
-                    <h:outputText value="#{m.playerTwo.name}" />
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Winner</f:facet>
-                    <h:outputText value="#{m.winner == null ? 'ONGOING' : m.winner.name}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Link</f:facet>
-                    <h:link value="view" outcome="match">
-                        <f:param name="uuid" value="#{m.uuid}"/>
-                    </h:link>
-                </h:column>
-            </h:dataTable>
-        </div>
+        <ui:composition template="./layout/layout.xhtml">
+            <ui:define name="top" />
+            <ui:define name="content">
+                <h2>matches</h2>
+                <h:dataTable id="matchesTable"
+                             value="#{matches.matches}"
+                             var="m">
+                    <h:column>
+                        <f:facet name="header">UUID</f:facet>
+                        <h:outputText value="#{m.uuid}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Player One</f:facet>
+                        <h:outputText value="#{m.playerOne.name}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Player Two</f:facet>
+                        <h:outputText value="#{m.playerTwo.name}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Winner</f:facet>
+                        <h:outputText value="#{m.winner == null ? 'ONGOING' : m.winner.name}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Link</f:facet>
+                        <h:link value="view" outcome="match">
+                            <f:param name="uuid" value="#{m.uuid}"/>
+                        </h:link>
+                    </h:column>
+                </h:dataTable>
+            </ui:define>
+            <ui:define name="bottom" />
+        </ui:composition>
     </h:body>
 </html>

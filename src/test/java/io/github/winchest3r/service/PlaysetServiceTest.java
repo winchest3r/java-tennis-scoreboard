@@ -58,11 +58,6 @@ public class PlaysetServiceTest {
             playsetService = new PlaysetService(sessionFactory);
     }
 
-    /* TODO
-     * setPlayerOneSetScore
-     * setPlayerTwoSetScore
-     */
-
     /** */
     @Test
     public void getPlaysetsByMatch() {

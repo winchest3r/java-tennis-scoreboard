@@ -58,16 +58,6 @@ public class GameServiceTest {
         gameService = new GameService(sessionFactory);
     }
 
-    /* TODO
-     * Testing of:
-     * getGameByPlayset
-     * getGameByUuid
-     * getGameByUnavailableUuid
-     * addNewGame
-     * setPlayerOneGameScore
-     * setPlayerTwoGameScore
-     */
-
     /** */
     @Test
     public void getGamesByPlayset() {

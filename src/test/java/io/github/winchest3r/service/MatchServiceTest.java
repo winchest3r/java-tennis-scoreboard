@@ -164,6 +164,8 @@ public class MatchServiceTest {
             assertNull(match.getWinner());
 
             matchService.setMatchWinner(match, match.getPlayerOne());
+            session.refresh(match);
+
             assertNotNull(match.getWinner());
             assertEquals(match.getPlayerOne(), match.getWinner());
         });

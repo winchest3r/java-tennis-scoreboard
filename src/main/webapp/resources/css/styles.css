@@ -9,6 +9,13 @@ body {
     padding-bottom: 20px;
 }
 
-.page {
+.main-content {
     margin: 10px;
+}
+
+.bottom-info {
+    position: absolute;
+    bottom: 20px;
+    text-align: center;
+    width: 70%;
 }
